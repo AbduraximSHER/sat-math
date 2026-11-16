@@ -1134,4 +1134,4 @@ def g_area(k: int) -> dict:
         return item(k, f"A circle has radius {r}. What is its area?", f"Aylananing radiusi {r}. Yuzi necha?", f"{r * r}π", f"π×{r}² = {r * r}π.", f"π×{r}² = {r * r}π.", str(r * r))
     b1, b2, h = 2 + ((k // 4) % 16), 4 + ((k // 64) % 18), 2 + ((k // 400) % 10)
     value = sp.Rational(b1 + b2, 2) * h
-    return item(k, f"A trapezoid has bases {b1} and {b2} and height {h}. What is its area?", f"Trapetsiyaning asoslari {b1} va {b2}, balandlidi {h}. Yuzi necha?", fmt(value), f"Average the bases, then multiply by {h}. The
+    return item(k, f"A trapezoid has bases {b1} and {b2} and height {h}. What is its area?", f"Trapetsiyaning asoslari {b1} va {b2}, balandligi {h}. Yuzi necha?", fmt(value), f"Average the bases, then multiply by {h}. The
