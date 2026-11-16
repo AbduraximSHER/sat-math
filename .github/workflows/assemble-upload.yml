@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Assemble gzip and part uploads
+      - name: Assemble gzip, bundle, and part uploads
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 <<'PY'
-          import base64, gzip, json, os, urllib.request, urllib.error
+          import base64, gzip, io, json, os, tarfile, urllib.request, urllib.error
           from pathlib import Path
 
           token = os.environ['GITHUB_TOKEN']
@@ -64,6 +64,31 @@ jobs:
               print('deleted', path)
 
           assembled = []
+
+          # 0) tarball bundle
+          bundle_dir = Path('guide/_upload/bundle')
+          bundle_meta = Path('guide/_upload/bundle_meta.json')
+          if bundle_dir.is_dir() and bundle_meta.exists():
+              meta = json.loads(bundle_meta.read_text())
+              expected = meta['parts']
+              part_files = sorted(bundle_dir.glob('*.b64'))
+              if len(part_files) >= expected:
+                  b64 = ''.join(p.read_text().strip() for p in part_files)
+                  raw = base64.b64decode(b64)
+                  print(f'bundle bytes {len(raw)} from {len(part_files)} parts')
+                  with tarfile.open(fileobj=io.BytesIO(raw), mode='r:gz') as tar:
+                      for m in tar.getmembers():
+                          if not m.isfile():
+                              continue
+                          f = tar.extractfile(m)
+                          data = f.read()
+                          print(f'bundle extract {m.name} bytes {len(data)}')
+                          put_file(m.name, data, f'Assemble {m.name} from guide bundle')
+                          assembled.append(m.name)
+                  for p in part_files:
+                      delete_file(f'guide/_upload/bundle/{p.name}', f'Cleanup bundle part {p.name}')
+              else:
+                  print(f'skip incomplete bundle: {len(part_files)}/{expected}')
 
           # 1) gzip single-file uploads
           gz_dir = Path('guide/_upload/gz')
