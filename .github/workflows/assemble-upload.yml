@@ -18,7 +18,6 @@ jobs:
           from pathlib import Path
 
           mapping = {
-              'bank': 'guide/bank.py',
               'guide_content_u1a': 'guide/content/u1a.py',
               'guide_content_u1b': 'guide/content/u1b.py',
               'guide_content_u2_algebra': 'guide/content/u2_algebra.py',
@@ -34,13 +33,12 @@ jobs:
 
           bank_dir = Path('guide/_upload/bank')
           if bank_dir.exists():
-              chunks = [base64.b64decode(p.read_text().strip()) for p in sorted(bank_dir.glob('*.b64'))]
-              if chunks:
-                  data = b''.join(chunks)
+              parts = sorted(bank_dir.glob('*.b64'))
+              if len(parts) >= 21:
+                  data = b''.join(base64.b64decode(p.read_text().strip()) for p in parts)
                   Path('guide/bank.py').write_bytes(data)
                   wrote.append(('guide/bank.py', len(data)))
 
-          # base64 content dirs (optional)
           content_b64 = Path('guide/_upload/content')
           if content_b64.exists():
               for key_dir in sorted(content_b64.iterdir()):
@@ -49,37 +47,25 @@ jobs:
                   rel = mapping.get(key_dir.name)
                   if not rel:
                       continue
-                  parts = sorted(key_dir.glob('*.b64'))
-                  if not parts:
+                  expected_path = key_dir / 'EXPECTED'
+                  if not expected_path.exists():
+                      print('skip', key_dir.name, 'no EXPECTED')
                       continue
-                  data = b''.join(base64.b64decode(p.read_text().strip()) for p in parts)
+                  expected = int(expected_path.read_text().strip())
+                  parts = sorted(key_dir.glob('*.b64'))
+                  if len(parts) < expected:
+                      print('skip', key_dir.name, 'have', len(parts), 'need', expected)
+                      continue
+                  data = b''.join(base64.b64decode(p.read_text().strip()) for p in parts[:expected])
                   out = Path(rel)
                   out.parent.mkdir(parents=True, exist_ok=True)
                   out.write_bytes(data)
                   wrote.append((rel, len(data)))
 
-          # raw utf-8 text dirs
-          content_txt = Path('guide/_upload/text')
-          if content_txt.exists():
-              for key_dir in sorted(content_txt.iterdir()):
-                  if not key_dir.is_dir():
-                      continue
-                  rel = mapping.get(key_dir.name)
-                  if not rel:
-                      continue
-                  parts = sorted(key_dir.glob('*.txt'))
-                  if not parts:
-                      continue
-                  text = ''.join(p.read_text() for p in parts)
-                  out = Path(rel)
-                  out.parent.mkdir(parents=True, exist_ok=True)
-                  out.write_text(text)
-                  wrote.append((rel, len(text.encode())))
-
           Path('/tmp/assembled.json').write_text(json.dumps(wrote))
           print('wrote', wrote)
           if not wrote:
-              raise SystemExit('nothing assembled')
+              print('nothing ready to assemble')
           PY
       - name: Commit via Contents API
         env:
@@ -90,6 +76,9 @@ jobs:
           token = os.environ['GITHUB_TOKEN']
           repo = os.environ.get('GITHUB_REPOSITORY', 'AbduraximSHER/sat-math')
           wrote = json.loads(open('/tmp/assembled.json').read())
+          if not wrote:
+              print('no commits')
+              raise SystemExit(0)
           headers = {
               'Authorization': f'Bearer {token}',
               'Accept': 'application/vnd.github+json',
