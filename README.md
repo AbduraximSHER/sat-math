@@ -30,6 +30,10 @@ Raqamli SAT Math: 2 modul, 44 savol, 70 daqiqa, Desmos butun bo'limda ruxsat. Ki
 
 ## Sayt
 
+Jonli: [https://sat-math.abenglish.workers.dev](https://sat-math.abenglish.workers.dev)
+
+GitHub: [AbduraximSHER/sat-math](https://github.com/AbduraximSHER/sat-math) — Cloudflare Workers Builds `main` ga push bo‘lganda avtomatik deploy qiladi.
+
 Sinf ekranida ochish uchun sayt `site/` papkasida. Har darsda 100 ta mashq banki (oson / o'rta / SAT) sahifalanadi. Kalit yopiq bo'lsa, mashq va mini-test javoblari brauzerga umuman yuborilmaydi — faqat kalit ochilganda `/api/keys` orqali yuklanadi. Til tugmasi inglizcha, o'zbekcha yoki ikkalasini ko'rsatadi.
 
 ```bash
