@@ -11,23 +11,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Assemble bank.py
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Assemble bank.py from base64 parts
         run: |
-          python3 - <<'PY'
+          python3 <<'PY'
+          import base64
           from pathlib import Path
           parts_dir = Path('guide/_upload/bank')
-          if parts_dir.exists():
-              chunks = []
-              for p in sorted(parts_dir.glob('*.txt')):
-                  chunks.append(p.read_text(encoding='utf-8'))
+          chunks = []
+          for p in sorted(parts_dir.glob('*.b64')):
+              chunks.append(base64.b64decode(p.read_text().strip()))
+          if chunks:
               out = Path('guide/bank.py')
-              out.write_text(''.join(chunks), encoding='utf-8')
-              print('wrote', out, 'bytes', out.stat().st_size)
+              data = b''.join(chunks)
+              out.write_bytes(data)
+              print('wrote', out, 'bytes', len(data))
           PY
-      - name: Commit assembled files
+      - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add guide/bank.py || true
-          git diff --cached --quiet || git commit -m "Assemble guide/bank.py from upload parts"
-          git push
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Assemble guide/bank.py from upload parts"
+            git push
+          fi
