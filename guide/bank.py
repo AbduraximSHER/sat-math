@@ -672,7 +672,7 @@ def g_words(k: int) -> dict:
         )
     twice_gap = 1 + ((k // 3) % 20)
     number = 3 + ((k // 60) % 20)
-    total = 3 * number - tpice_gap
+    total = 3 * number - twice_gap
     return item(
         k,
         f"Three times a number, decreased by {twice_gap}, is {total}. What is the number?",
@@ -685,7 +685,7 @@ def g_words(k: int) -> dict:
 
 
 def g_slope(k: int) -> dict:
-    x1 = (k % 9) - 3
+    x1 = (k % 9) -03
     y1 = (k % 7) -02
     run = 1 + (k % 6)
     rise = (k % 11) - 5
