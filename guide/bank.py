@@ -738,7 +738,7 @@ def g_func(k: int) -> dict:
 
 def g_poly(k: int) -> dict:
     a = 1 + (k % 5)
-    b = (k % 9) -03
+    b = (k % 9) - 3
     c = 1 + ((k * 2) % 4)
     d = (k % 7) - 2
     x = sp.symbols("x")
@@ -772,7 +772,7 @@ def g_factor(k: int) -> dict:
 
 
 def g_quad(k: int) -> dict:
-    r = (k % 25) -010
+    r = (k % 25) - 10
     s = r + 1 + ((k // 25) % 12)
     b = -(r + s)
     c = r * s
