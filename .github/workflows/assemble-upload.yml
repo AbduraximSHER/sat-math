@@ -11,53 +11,102 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Assemble bank.py from base64 parts
+      - name: Assemble files from base64 parts
         run: |
           python3 <<'PY'
-          import base64
+          import base64, json
           from pathlib import Path
-          parts_dir = Path('guide/_upload/bank')
-          chunks = []
-          for p in sorted(parts_dir.glob('*.b64')):
-              chunks.append(base64.b64decode(p.read_text().strip()))
-          if not chunks:
-              raise SystemExit('no parts')
-          data = b''.join(chunks)
-          Path('guide/bank.py').write_bytes(data)
-          print('wrote guide/bank.py bytes', len(data))
-          Path('/tmp/bank_size.txt').write_text(str(len(data)))
+
+          mapping = {
+              'bank': 'guide/bank.py',
+              'guide_content_u1a': 'guide/content/u1a.py',
+              'guide_content_u1b': 'guide/content/u1b.py',
+              'guide_content_u2_algebra': 'guide/content/u2_algebra.py',
+              'guide_content_u3a': 'guide/content/u3a.py',
+              'guide_content_u3b': 'guide/content/u3b.py',
+              'guide_content_u4_data': 'guide/content/u4_data.py',
+              'guide_content_u5_geometry': 'guide/content/u5_geometry.py',
+              'guide_content_u6_craft': 'guide/content/u6_craft.py',
+              'guide_depth': 'guide/depth.py',
+          }
+
+          wrote = []
+          # legacy bank path
+          bank_dir = Path('guide/_upload/bank')
+          if bank_dir.exists():
+              chunks = [base64.b64decode(p.read_text().strip()) for p in sorted(bank_dir.glob('*.b64'))]
+              if chunks:
+                  data = b''.join(chunks)
+                  Path('guide/bank.py').write_bytes(data)
+                  wrote.append(('guide/bank.py', len(data)))
+
+          content_root = Path('guide/_upload/content')
+          if content_root.exists():
+              for key_dir in sorted(content_root.iterdir()):
+                  if not key_dir.is_dir():
+                      continue
+                  key = key_dir.name
+                  rel = mapping.get(key)
+                  if not rel:
+                      print('skip unknown', key)
+                      continue
+                  parts = sorted(key_dir.glob('*.b64'))
+                  if not parts:
+                      continue
+                  data = b''.join(base64.b64decode(p.read_text().strip()) for p in parts)
+                  out = Path(rel)
+                  out.parent.mkdir(parents=True, exist_ok=True)
+                  out.write_bytes(data)
+                  wrote.append((rel, len(data)))
+
+          Path('/tmp/assembled.json').write_text(json.dumps(wrote))
+          print('wrote', wrote)
+          if not wrote:
+              raise SystemExit('nothing assembled')
           PY
       - name: Commit via Contents API
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 <<'PY'
-          import base64, json, os, urllib.request
+          import base64, json, os, urllib.request, urllib.error
           token = os.environ['GITHUB_TOKEN']
           repo = os.environ.get('GITHUB_REPOSITORY', 'AbduraximSHER/sat-math')
-          path = 'guide/bank.py'
-          content = open(path, 'rb').read()
-          api = f'https://api.github.com/repos/{repo}/contents/{path}'
+          wrote = json.loads(open('/tmp/assembled.json').read())
           headers = {
               'Authorization': f'Bearer {token}',
               'Accept': 'application/vnd.github+json',
               'User-Agent': 'assemble-upload',
           }
-          req = urllib.request.Request(api + '?ref=main', headers=headers)
-          with urllib.request.urlopen(req) as r:
-              sha = json.load(r)['sha']
-          body = json.dumps({
-              'message': 'Assemble guide/bank.py from upload parts',
-              'content': base64.b64encode(content).decode('ascii'),
-              'sha': sha,
-              'branch': 'main',
-          }).encode()
-          req = urllib.request.Request(api, data=body, method='PUT', headers={**headers, 'Content-Type': 'application/json'})
-          try:
-              with urllib.request.urlopen(req) as r:
-                  out = json.load(r)
-                  print('updated', out['content']['path'], 'size', out['content']['size'])
-          except urllib.error.HTTPError as e:
-              print(e.read().decode())
-              raise
+          for path, size in wrote:
+              content = open(path, 'rb').read()
+              api = f'https://api.github.com/repos/{repo}/contents/{path}'
+              sha = None
+              try:
+                  req = urllib.request.Request(api + '?ref=main', headers=headers)
+                  with urllib.request.urlopen(req) as r:
+                      sha = json.load(r)['sha']
+              except urllib.error.HTTPError as e:
+                  if e.code != 404:
+                      raise
+              body = {
+                  'message': f'Assemble {path} from upload parts',
+                  'content': base64.b64encode(content).decode('ascii'),
+                  'branch': 'main',
+              }
+              if sha:
+                  body['sha'] = sha
+              req = urllib.request.Request(
+                  api,
+                  data=json.dumps(body).encode(),
+                  method='PUT',
+                  headers={**headers, 'Content-Type': 'application/json'},
+              )
+              try:
+                  with urllib.request.urlopen(req) as r:
+                      out = json.load(r)
+                      print('updated', out['content']['path'], 'size', out['content']['size'])
+              except urllib.error.HTTPError as e:
+                  print(path, e.read().decode())
+                  raise
           PY
