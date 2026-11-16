@@ -1,13 +1,4 @@
 __pycache__/
 *.py[cod]
 .venv/
-venv/
-node_modules/
-.next/
-.open-next/
-.wrangler/
-site/.env*
-*.tsbuildinfo
-dist/
-guide/assets/
-.DS_Store
+*.egg-info/

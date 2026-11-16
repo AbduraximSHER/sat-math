@@ -1,1 +1,1 @@
-"""SAT Math teacher guide package."""
+"""Bilingual Digital SAT Math teacher guide."""
