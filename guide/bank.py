@@ -404,4 +404,436 @@ def g_change(k: int) -> dict:
     return item(
         k,
         f"A value goes from {old} to {new}. By what percent did it {word}?",
-        f"Qiymat {old} dan {new} ga o'tdi. Necha foizga {s
+        f"Qiymat {old} dan {new} ga o'tdi. Necha foizga {suz}?",
+        f"{fmt(value)}%",
+        f"The change is {change} and the original is {old}. {change}/{old} = {fmt(value)}%.",
+        f"O'zgarish {change}, eski son {old}. {change}/{old} = {fmt(value)}%.",
+        expr=str(value),
+    )
+
+
+def g_ratio(k: int) -> dict:
+    a = 1 + (k % 15)
+    b = a + 1 + ((k * 3) % 12)
+    parts = a + b
+    scale = 2 + ((k * 5) % 14)
+    total = parts * scale
+    if k % 2 == 0:
+        answer = a * scale
+        which, qaysi = "smaller", "kichik"
+    else:
+        answer = b * scale
+        which, qaysi = "larger", "katta"
+    return item(
+        k,
+        f"Two parts are in the ratio {a}:{b} and total {total}. What is the {which} part?",
+        f"Ikki qism {a}:{b} nisbatda va jami {total}. {qaysi.capitalize()} qism necha?",
+        str(answer),
+        f"One share is {scale}. The {which} part is {answer}.",
+        f"Bitta ulush {scale}. {qaysi.capitalize()} qism {answer}.",
+        expr=str(answer),
+    )
+
+
+def g_prop(k: int) -> dict:
+    if k % 4 == 3:
+        workers = 2 + (k % 6)
+        days = 4 + (k % 8)
+        more = workers + 1 + (k % 4)
+        job = workers * days
+        if job % more != 0:
+            more = math.gcd(job, more) or 1
+            if more == 0:
+                more = 1
+        answer = job // more
+        return item(
+            k,
+            f"{workers} painters finish a job in {days} days. How many days do {more} painters need?",
+            f"{workers} bo'yoqchi ishni {days} kunda tugatadi. {more} bo'yoqchiga necha kun kerak?",
+            str(answer),
+            f"The job is {job} painter-days. {job}/{more} = {answer} days.",
+            f"Ish {job} bo'yoqchi-kun. {job}/{more} = {answer} kun.",
+            expr=str(answer),
+        )
+    a, b = 1 + (k % 8), 2 + (k % 7)
+    scale = 2 + (k % 6)
+    left = a * scale
+    right = b * scale
+    x = right
+    return item(
+        k,
+        f"Solve {a}/{b} = {left}/x.",
+        f"{a}/{b} = {left}/x tenglamasidan x ni toping.",
+        str(x),
+        f"The scale from {a} to {left} is {scale}, so x = {b} × {scale} = {x}.",
+        f"{a} dan {left} gacha masshtab {scale}, demak x = {b} × {scale} = {x}.",
+        expr=str(x),
+    )
+
+
+def g_exp(k: int) -> dict:
+    base = 2 + (k % 8)
+    m = 1 + ((k // 8) % 5)
+    n = 1 + ((k // 40) % 5)
+    kind = k % 3
+    if kind == 0:
+        value = base ** (m + n)
+        en = f"Evaluate {base}^{m} × {base}^{n}."
+        uz = f"{base}^{m} × {base}^{n} ning qiymatini toping."
+    elif kind == 1:
+        value = base ** (m * n)
+        en = f"Evaluate ({base}^{m})^{n}."
+        uz = f"({base}^{m})^{n} ning qiymatini toping."
+    else:
+        value = sp.Rational(1, base**m)
+        en = f"Write {base}^(−{m}) as a simplified fraction."
+        uz = f"{base}^(−{m}) ni qisqartirilgan kasr qilib yozing."
+    return item(
+        k,
+        en,
+        uz,
+        fmt(value),
+        f"Use the exponent rule. The value is {fmt(value)}.",
+        f"Daraja qoidasini qo'llang. Qiymat {fmt(value)}.",
+        expr=str(sp.simplify(value)),
+    )
+
+
+def sqrt_form(n: int) -> tuple[str, sp.Expr]:
+    a = 1
+    b = n
+    i = 2
+    while i * i <= b:
+        while b % (i * i) == 0:
+            b //= i * i
+            a *= i
+        i += 1
+    expr = a * sp.sqrt(b)
+    if b == 1:
+        text = str(a)
+    elif a == 1:
+        text = f"√{b}"
+    else:
+        text = f"{a}√{b}"
+    return text, expr
+
+
+def g_roots(k: int) -> dict:
+    n = 2 + (k % 180)
+    text, expression = sqrt_form(n)
+    if sp.simplify(expression - sp.sqrt(n)) != 0:
+        raise AssertionError(n)
+    return item(
+        k,
+        f"Simplify √{n}.",
+        f"√{n} ni soddalashtiring.",
+        text,
+        f"Pull out square factors. √{n} = {text}.",
+        f"Kvadrat ko'paytuvchilarni chiqaring. √{n} = {text}.",
+        expr="",
+    )
+
+
+def g_sci(k: int) -> dict:
+    coeff = 1 + ((k // 2) % 30)
+    exp = 1 + ((k // 60) % 6)
+    if k % 2 == 0:
+        value = coeff * 10**exp
+        return item(
+            k,
+            f"Write {coeff} × 10^{exp} as an ordinary number.",
+            f"{coeff} × 10^{exp} ni oddiy son qilib yozing.",
+            str(value),
+            f"Move the point {exp} places right. The number is {value}.",
+            f"Nuqtani {exp} o'rin o'ngga suring. Son {value}.",
+            expr=str(value),
+        )
+    hours = sp.Rational(1 + ((k // 2) % 40), 2)
+    minutes = hours * 60
+    return item(
+        k,
+        f"Convert {fmt(hours)} hours to minutes.",
+        f"{fmt(hours)} soatni daqiqaga aylantiring.",
+        fmt(minutes),
+        f"Multiply by 60. The result is {fmt(minutes)} minutes.",
+        f"60 ga ko'paytiring. Natija {fmt(minutes)} daqiqa.",
+        expr=str(minutes),
+    )
+
+
+def g_expr(k: int) -> dict:
+    a = 1 + (k % 8)
+    b = 1 + ((k * 3) % 9)
+    c = (k % 7) - 2
+    x = sp.symbols("x")
+    value = sp.expand(a * (x + b) + c * x)
+    answer = str(value).replace("**", "^").replace("*", "")
+    return item(
+        k,
+        f"Simplify {a}(x + {b}) + ({c})x.",
+        f"{a}(x + {b}) + ({c})x ifodasini soddalashtiring.",
+        answer,
+        f"Distribute, then combine like terms. The result is {answer}.",
+        f"Qavsni oching, so'ng o'xshash hadlarni birlashtiring. Natija {answer}.",
+        expr=str(sp.simplify(value - sp.expand(value))),
+    )
+
+
+def g_linear(k: int) -> dict:
+    a = 1 + (k % 9)
+    x0 = (k % 13) - 4
+    b = (k % 11) - 3
+    right = a * x0 + b
+    return item(
+        k,
+        f"Solve {a}x + ({b}) = {right}.",
+        f"{a}x + ({b}) = {right} tenglamasini yeching.",
+        str(x0),
+        f"Undo the addition, then divide by {a}. x = {x0}.",
+        f"Qo'shishni qaytaring, so'ng {a} ga bo'ling. x = {x0}.",
+        expr=str(x0),
+    )
+
+
+def g_frac_eq(k: int) -> dict:
+    p = 1 + (k % 12)
+    q = p + 1 + ((k // 12) % 8)
+    mult = 1 + ((k // 96) % 8)
+    product = p * mult
+    x0 = mult * q
+    return item(
+        k,
+        f"Solve ({p}/{q})x = {product}.",
+        f"({p}/{q})x = {product} tenglamasini yeching.",
+        str(x0),
+        f"Multiply by the reciprocal {q}/{p}. x = {x0}.",
+        f"Teskari kasr {q}/{p} ga ko'paytiring. x = {x0}.",
+        expr=str(x0),
+    )
+
+
+def g_ineq(k: int) -> dict:
+    if k % 5 == 4:
+        bound = 1 + ((k // 5) % 40)
+        # -2x > 2*bound => x < -bound
+        answer = f"x < -{bound}"
+        return item(
+            k,
+            f"Solve −2x > {2 * bound}.",
+            f"−2x > {2 * bound} tengsizligini yeching.",
+            answer,
+            f"Divide by −2 and flip the sign. {answer}.",
+            f"−2 ga bo'ling va belgini almashtiring. {answer}.",
+            expr=str(-bound),
+        )
+    added = (k // 5) % 25
+    gap = 1 + ((k // 125) % 20)
+    limit = added + gap
+    answer = f"x < {gap}"
+    return item(
+        k,
+        f"Solve x + {added} < {limit}.",
+        f"x + {added} < {limit} tengsizligini yeching.",
+        answer,
+        f"Subtract {added}. {answer}.",
+        f"{added} ni ayiring. {answer}.",
+        expr=str(gap),
+    )
+
+
+def g_words(k: int) -> dict:
+    kind = k % 3
+    if kind == 0:
+        extra = 2 + ((k // 3) % 30)
+        total = extra + 3 + ((k // 90) % 25)
+        number = total - extra
+        return item(
+            k,
+            f"A number increased by {extra} is {total}. What is the number?",
+            f"Sonning ustiga {extra} qo'shilsa, {total} chiqadi. Son necha?",
+            str(number),
+            f"x + {extra} = {total}, so x = {number}.",
+            f"x + {extra} = {total}, demak x = {number}.",
+            expr=str(number),
+        )
+    if kind == 1:
+        fee = 2 + ((k // 3) % 15)
+        rate = 2 + ((k // 45) % 10)
+        count = 2 + ((k // 450) % 12)
+        total = fee + rate * count
+        return item(
+            k,
+            f"Tickets cost ${rate} each plus a ${fee} fee. The total is ${total}. How many tickets?",
+            f"Chipta {rate} dollardan, ustiga {fee} dollar haq. Jami {total} dollar. Nechta chipta?",
+            str(count),
+            f"{rate}n + {fee} = {total}, so n = {count}.",
+            f"{rate}n + {fee} = {total}, demak n = {count}.",
+            expr=str(count),
+        )
+    twice_gap = 1 + ((k // 3) % 20)
+    number = 3 + ((k // 60) % 20)
+    total = 3 * number - tpice_gap
+    return item(
+        k,
+        f"Three times a number, decreased by {twice_gap}, is {total}. What is the number?",
+        f"Sonning uch baravari, {twice_gap} ga kamaytirilsa, {total}. Son necha?",
+        str(number),
+        f"3x − {twice_gap} = {total}, so x = {number}.",
+        f"3x − {twice_gap} = {total}, demak x = {number}.",
+        expr=str(number),
+    )
+
+
+def g_slope(k: int) -> dict:
+    x1 = (k % 9) - 3
+    y1 = (k % 7) -02
+    run = 1 + (k % 6)
+    rise = (k % 11) - 5
+    if rise == 0 and k % 2 == 0:
+        rise = 2
+    x2, y2 = x1 + run, y1 + rise
+    slope = sp.Rational(rise, run)
+    return item(
+        k,
+        f"What is the slope of the line through ({x1}, {y1}) and ({x2}, {y2})?",
+        f"({x1}, {y1}) va ({x2}, {y2}) nuqtalardan o'tgan chiziqning qiyaligi necha?",
+        fmt(slope),
+        f"Rise {rise}, run {run}. Slope = {fmt(slope)}.",
+        f"Ko'tarilish {rise}, yugurish {run}. Qiyalik = {fmt(slope)}.",
+        expr=str(slope),
+    )
+
+
+def g_system(k: int) -> dict:
+    x0 = (k % 20) - 8
+    y0 = ((k // 20) % 15) - 6
+    s = x0 + y0
+    t = x0 - y0
+    return item(
+        k,
+        f"Solve the system x + y = {s} and x − y = {t}.",
+        f"x + y = {s} va x − y = {t} sistemasini yeching.",
+        f"x = {x0}, y = {y0}",
+        f"Add the equations to get x, then subtract to get y. x = {x0}, y = {y0}.",
+        f"Tenglamalarni qo'shib x ni, ayirib y ni toping. x = {x0}, y = {y0}.",
+        expr=f"{x0},{y0}",
+    )
+
+
+def g_func(k: int) -> dict:
+    a = 1 + (k % 8)
+    b = (k % 13) - 5
+    n = (k % 10) - 2
+    value = a * n + b
+    return item(
+        k,
+        f"If f(x) = {a}x + ({b}), what is f({n})?",
+        f"Agar f(x) = {a}x + ({b}) bo'lsa, f({n}) necha?",
+        str(value),
+        f"Substitute {n}: {a}×{n} + ({b}) = {value}.",
+        f"{n} ni qo'ying: {a}×{n} + ({b}) = {value}.",
+        expr=str(value),
+    )
+
+
+def g_poly(k: int) -> dict:
+    a = 1 + (k % 5)
+    b = (k % 9) -03
+    c = 1 + ((k * 2) % 4)
+    d = (k % 7) - 2
+    x = sp.symbols("x")
+    value = sp.expand((a * x + b) * (c * x + d))
+    answer = str(value).replace("**", "^").replace("*", "")
+    return item(
+        k,
+        f"Expand ({a}x + ({b}))({c}x + ({d})).",
+        f"({a}x + ({b}))({c}x + ({d})) ifodasini yoying.",
+        answer,
+        f"Each term meets each term. The product is {answer}.",
+        f"Har bir had har bir had bilan uchrashadi. Ko'paytma {answer}.",
+        expr="0",
+    )
+
+
+def g_factor(k: int) -> dict:
+    r = 1 + (k % 30)
+    s = r + 1 + ((k // 30) % 8)
+    b = r + s
+    c = r * s
+    return item(
+        k,
+        f"Factor x² + {b}x + {c}.",
+        f"x² + {b}x + {c} ni ko'paytuvchilarga ajrating.",
+        f"(x + {r})(x + {s})",
+        f"{r} and {s} multiply to {c} and add to {b}.",
+        f"{r} va {s} ning ko'paytmasi {c}, yig'indisi {b}.",
+        expr="0",
+    )
+
+
+def g_quad(k: int) -> dict:
+    r = (k % 25) -010
+    s = r + 1 + ((k // 25) % 12)
+    b = -(r + s)
+    c = r * s
+    bsign = f"+ {b}" if b >= 0 else f"− {abs(b)}"
+    csign = f"+ {c}" if c >= 0 else f"− {abs(c)}"
+    return item(
+        k,
+        f"Solve x² {bsign}x {csign} = 0.",
+        f"x² {bsign}x {csign} = 0 tenglamasini yeching.",
+        f"x = {r} or x = {s}",
+        f"The roots are {r} and {s}, because those values make a factor zero.",
+        f"Ildizlar {r} va {s}, chunki o'sha qiymatlar ko'paytuvchini nol qiladi.",
+        expr=f"{r},{s}",
+    )
+
+
+def g_vertex(k: int) -> dict:
+    h = (k % 11) - 5
+    m = 1 + (k % 8)
+    sign = 1 if k % 2 == 0 else -1
+    name = "minimum" if sign == 1 else "maximum"
+    uz = "minimum" if sign == 1 else "maksimum"
+    inside = f"x − ({h})" if h >= 0 else f"x + {abs(h)}"
+    coef = "" if sign == 1 else "−"
+    if m != 1:
+        coef = f"{sign * m}"
+    return item(
+        k,
+        f"What is the {name} value of y = {coef}({inside})² + ({m if sign == 1 else -m})?" if False else f"What is the {name} value of y = {sign * m}({inside})² + {3 + (k % 6)}?",
+        f"y = {sign * m}({inside})² + {3 + (k % 6)} ning {uz} qiymati necha?",
+        str(3 + (k % 6)) if sign == 1 else str(3 + (k % 6)),
+        f"The squared term cannot go past the vertex value {3 + (k % 6)} when the leading coefficient is {'positive' if sign == 1 else 'negative'}.",
+        f"Yetakchi koeffitsiyent {'musbat' if sign == 1 else 'manfiy'} bo'lgani uchun uchdagi qiymat {3 + (k % 6)}.",
+        expr=str(3 + (k % 6)),
+    )
+
+
+def g_equiv(k: int) -> dict:
+    a = 2 + (k % 6)
+    b = 1 + (k % 8)
+    c = 1 + (k % 5)
+    x = sp.symbols("x")
+    value = sp.expand(a * (x + b) - c * x)
+    answer = str(value).replace("**", "^").replace("*", "")
+    return item(
+        k,
+        f"Write an expression equivalent to {a}(x + {b}) − {c}x.",
+        f"{a}(x + {b}) − {c}x ga teng kuchli ifoda yozing.",
+        answer,
+        f"Distribute and combine. The equivalent expression is {answer}.",
+        f"Qavsni oching va birlashtiring. Teng kuchli ifoda {answer}.",
+        expr="0",
+    )
+
+
+def g_rational(k: int) -> dict:
+    p = 2 + (k % 40)
+    q = 1 + ((k // 40) % 15)
+    if math.gcd(p, q) != 1 and k % 2 == 0:
+        q += 1
+    x0 = sp.Rational(p, q)
+    return item(
+        k,
+        f"Solve {p}/x = {q}."
