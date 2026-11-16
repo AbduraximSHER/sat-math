@@ -1,0 +1,33 @@
+name: Assemble upload parts
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'guide/_upload/**'
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble bank.py
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          parts_dir = Path('guide/_upload/bank')
+          if parts_dir.exists():
+              chunks = []
+              for p in sorted(parts_dir.glob('*.txt')):
+                  chunks.append(p.read_text(encoding='utf-8'))
+              out = Path('guide/bank.py')
+              out.write_text(''.join(chunks), encoding='utf-8')
+              print('wrote', out, 'bytes', out.stat().st_size)
+          PY
+      - name: Commit assembled files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add guide/bank.py || true
+          git diff --cached --quiet || git commit -m "Assemble guide/bank.py from upload parts"
+          git push
