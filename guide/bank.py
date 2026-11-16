@@ -685,8 +685,8 @@ def g_words(k: int) -> dict:
 
 
 def g_slope(k: int) -> dict:
-    x1 = (k % 9) -03
-    y1 = (k % 7) -02
+    x1 = (k % 9) - 3
+    y1 = (k % 7) - 2
     run = 1 + (k % 6)
     rise = (k % 11) - 5
     if rise == 0 and k % 2 == 0:
