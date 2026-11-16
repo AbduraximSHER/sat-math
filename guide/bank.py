@@ -88,25 +88,4 @@ def g_fractions(k: int) -> dict:
     elif op == 2:
         value = left * right
         sign, word, suz = "×", "product", "ko'paytmasi"
-    else:
-        value = left / right
-        sign, word, suz = "÷", "quotient", "bo'linmasi"
-    answer = fmt(value)
-    en = f"Find the {word} {a}/{b} {sign} {c}/{d} as a simplified fraction."
-    uz = f"{a}/{b} {sign} {c}/{d} ning {suz}ni qisqartirilgan kasrda toping."
-    sen = f"Compute {a}/{b} {sign} {c}/{d}. The simplified value is {answer}."
-    suz_s = f"{a}/{b} {sign} {c}/{d} ni hisoblang. Qisqartirilgan qiymat {answer}."
-    return item(k, en, uz, answer, sen, suz_s, expr=str(value))
-
-
-def g_abs(k: int) -> dict:
-    kind = k % 3
-    if kind == 0:
-        n = k + 1
-        answer = str(n)
-        return item(
-            k,
-            f"Evaluate |−{n}|.",
-            f"|−{n}| ning qiymatini toping.",
-            answer,
-            f"The"},{
+    el
