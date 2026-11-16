@@ -1,0 +1,82 @@
+[
+  {
+    "slug": "content__u1a",
+    "target": "guide/content/u1a.py",
+    "parts": 24,
+    "bytes": 52070,
+    "batch_msg": null,
+    "batch": 0
+  },
+  {
+    "slug": "content__u1b",
+    "target": "guide/content/u1b.py",
+    "parts": 23,
+    "bytes": 51218,
+    "batch_msg": null,
+    "batch": 0
+  },
+  {
+    "slug": "content__u2_algebra",
+    "target": "guide/content/u2_algebra.py",
+    "parts": 36,
+    "bytes": 79855,
+    "batch_msg": null,
+    "batch": 1
+  },
+  {
+    "slug": "content__u3a",
+    "target": "guide/content/u3a.py",
+    "parts": 18,
+    "bytes": 39346,
+    "batch_msg": null,
+    "batch": 1
+  },
+  {
+    "slug": "content__u3b",
+    "target": "guide/content/u3b.py",
+    "parts": 18,
+    "bytes": 38887,
+    "batch_msg": null,
+    "batch": 2
+  },
+  {
+    "slug": "content__u4_data",
+    "target": "guide/content/u4_data.py",
+    "parts": 28,
+    "bytes": 61534,
+    "batch_msg": null,
+    "batch": 2
+  },
+  {
+    "slug": "content__u5_geometry",
+    "target": "guide/content/u5_geometry.py",
+    "parts": 32,
+    "bytes": 69917,
+    "batch_msg": null,
+    "batch": 3
+  },
+  {
+    "slug": "content__u6_craft",
+    "target": "guide/content/u6_craft.py",
+    "parts": 19,
+    "bytes": 41752,
+    "batch_msg": null,
+    "batch": 3
+  },
+  {
+    "slug": "depth",
+    "target": "guide/depth.py",
+    "parts": 21,
+    "bytes": 45883,
+    "batch_msg": null,
+    "batch": 4
+  },
+  {
+    "slug": "build_guide",
+    "target": "guide/build_guide.py",
+    "parts": 12,
+    "bytes": 25843,
+    "batch_msg": null,
+    "batch": 4
+  }
+]

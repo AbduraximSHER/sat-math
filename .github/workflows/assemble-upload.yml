@@ -11,102 +11,82 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Assemble files from base64 parts
-        run: |
-          python3 <<'PY'
-          import base64, json
-          from pathlib import Path
-
-          mapping = {
-              'bank': 'guide/bank.py',
-              'guide_content_u1a': 'guide/content/u1a.py',
-              'guide_content_u1b': 'guide/content/u1b.py',
-              'guide_content_u2_algebra': 'guide/content/u2_algebra.py',
-              'guide_content_u3a': 'guide/content/u3a.py',
-              'guide_content_u3b': 'guide/content/u3b.py',
-              'guide_content_u4_data': 'guide/content/u4_data.py',
-              'guide_content_u5_geometry': 'guide/content/u5_geometry.py',
-              'guide_content_u6_craft': 'guide/content/u6_craft.py',
-              'guide_depth': 'guide/depth.py',
-          }
-
-          wrote = []
-          # legacy bank path
-          bank_dir = Path('guide/_upload/bank')
-          if bank_dir.exists():
-              chunks = [base64.b64decode(p.read_text().strip()) for p in sorted(bank_dir.glob('*.b64'))]
-              if chunks:
-                  data = b''.join(chunks)
-                  Path('guide/bank.py').write_bytes(data)
-                  wrote.append(('guide/bank.py', len(data)))
-
-          content_root = Path('guide/_upload/content')
-          if content_root.exists():
-              for key_dir in sorted(content_root.iterdir()):
-                  if not key_dir.is_dir():
-                      continue
-                  key = key_dir.name
-                  rel = mapping.get(key)
-                  if not rel:
-                      print('skip unknown', key)
-                      continue
-                  parts = sorted(key_dir.glob('*.b64'))
-                  if not parts:
-                      continue
-                  data = b''.join(base64.b64decode(p.read_text().strip()) for p in parts)
-                  out = Path(rel)
-                  out.parent.mkdir(parents=True, exist_ok=True)
-                  out.write_bytes(data)
-                  wrote.append((rel, len(data)))
-
-          Path('/tmp/assembled.json').write_text(json.dumps(wrote))
-          print('wrote', wrote)
-          if not wrote:
-              raise SystemExit('nothing assembled')
-          PY
-      - name: Commit via Contents API
+      - name: Assemble all upload targets from base64 parts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 <<'PY'
           import base64, json, os, urllib.request, urllib.error
+          from pathlib import Path
+
           token = os.environ['GITHUB_TOKEN']
           repo = os.environ.get('GITHUB_REPOSITORY', 'AbduraximSHER/sat-math')
-          wrote = json.loads(open('/tmp/assembled.json').read())
           headers = {
               'Authorization': f'Bearer {token}',
               'Accept': 'application/vnd.github+json',
               'User-Agent': 'assemble-upload',
           }
-          for path, size in wrote:
-              content = open(path, 'rb').read()
+
+          # Map upload dir slug -> destination path
+          upload_root = Path('guide/_upload')
+          # Prefer manifest if present
+          manifest_path = upload_root / 'manifest.json'
+          targets = []
+          if manifest_path.exists():
+              targets = json.loads(manifest_path.read_text())
+          else:
+              for d in sorted(upload_root.iterdir()):
+                  if not d.is_dir():
+                      continue
+                  slug = d.name
+                  if slug.startswith('content__'):
+                      target = f"guide/content/{slug[len('content__'):]}.py"
+                  else:
+                      target = f"guide/{slug}.py"
+                  targets.append({'slug': slug, 'target': target})
+
+          def put_file(path: str, content: bytes, message: str):
               api = f'https://api.github.com/repos/{repo}/contents/{path}'
               sha = None
+              req = urllib.request.Request(api + '?ref=main', headers=headers)
               try:
-                  req = urllib.request.Request(api + '?ref=main', headers=headers)
                   with urllib.request.urlopen(req) as r:
                       sha = json.load(r)['sha']
               except urllib.error.HTTPError as e:
                   if e.code != 404:
                       raise
               body = {
-                  'message': f'Assemble {path} from upload parts',
+                  'message': message,
                   'content': base64.b64encode(content).decode('ascii'),
                   'branch': 'main',
               }
               if sha:
                   body['sha'] = sha
+              data = json.dumps(body).encode()
               req = urllib.request.Request(
-                  api,
-                  data=json.dumps(body).encode(),
-                  method='PUT',
+                  api, data=data, method='PUT',
                   headers={**headers, 'Content-Type': 'application/json'},
               )
-              try:
-                  with urllib.request.urlopen(req) as r:
-                      out = json.load(r)
-                      print('updated', out['content']['path'], 'size', out['content']['size'])
-              except urllib.error.HTTPError as e:
-                  print(path, e.read().decode())
-                  raise
+              with urllib.request.urlopen(req) as r:
+                  out = json.load(r)
+                  print('updated', out['content']['path'], 'size', out['content']['size'])
+
+          for item in targets:
+              slug = item['slug']
+              target = item['target']
+              parts_dir = upload_root / slug
+              if not parts_dir.is_dir():
+                  print('skip missing dir', slug)
+                  continue
+              chunks = []
+              for p in sorted(parts_dir.glob('*.b64')):
+                  chunks.append(base64.b64decode(p.read_text().strip()))
+              if not chunks:
+                  print('skip empty', slug)
+                  continue
+              data = b''.join(chunks)
+              Path(target).parent.mkdir(parents=True, exist_ok=True)
+              Path(target).write_bytes(data)
+              print(f'assembled {target} bytes {len(data)}')
+              put_file(target, data, f'Assemble {target} from upload parts')
           PY
