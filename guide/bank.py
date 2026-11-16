@@ -1134,4 +1134,182 @@ def g_area(k: int) -> dict:
         return item(k, f"A circle has radius {r}. What is its area?", f"Aylananing radiusi {r}. Yuzi necha?", f"{r * r}π", f"π×{r}² = {r * r}π.", f"π×{r}² = {r * r}π.", str(r * r))
     b1, b2, h = 2 + ((k // 4) % 16), 4 + ((k // 64) % 18), 2 + ((k // 400) % 10)
     value = sp.Rational(b1 + b2, 2) * h
-    return item(k, f"A trapezoid has bases {b1} and {b2} and height {h}. What is its area?", f"Trapetsiyaning asoslari {b1} va {b2}, balandligi {h}. Yuzi necha?", fmt(value), f"Average the bases, then multiply by {h}. The
+    return item(k, f"A trapezoid has bases {b1} and {b2} and height {h}. What is its area?", f"Trapetsiyaning asoslari {b1} va {b2}, balandligi {h}. Yuzi necha?", fmt(value), f"Average the bases, then multiply by {h}. The area is {fmt(value)}.", f"Asoslarning o'rtachasini {h} ga ko'paytiring. Yuza {fmt(value)}.", str(value))
+
+
+def g_volume(k: int) -> dict:
+    kind = k % 4
+    if kind == 0:
+        a, b, c = 2 + ((k // 4) % 12), 2 + ((k // 48) % 10), 2 + ((k // 480) % 8)
+        return item(k, f"A box is {a} by {b} by {c}. What is its volume?", f"Quti {a} ga {b} ga {c}. Hajmi necha?", str(a * b * c), f"{a}×{b}×{c} = {a * b * c}.", f"{a}×{b}×{c} = {a * b * c}.", str(a * b * c))
+    r = 1 + ((k // 4) % 16)
+    h = 2 + ((k // 64) % 14)
+    if kind == 1:
+        return item(k, f"A cylinder has radius {r} and height {h}. What is its volume?", f"Silindrning radiusi {r}, balandligi {h}. Hajmi necha?", f"{r * r * h}π", f"π×{r}²×{h} = {r * r * h}π.", f"π×{r}²×{h} = {r * r * h}π.", str(r * r * h))
+    if kind == 2:
+        volume = sp.Rational(r * r * h, 3)
+        return item(k, f"A cone has radius {r} and height {h}. What is its volume?", f"Konusning radiusi {r}, balandligi {h}. Hajmi necha?", f"{fmt(volume)}π", f"(1/3)π×{r}²×{h} = {fmt(volume)}π.", f"(1/3)π×{r}²×{h} = {fmt(volume)}π.", str(volume))
+    sphere = sp.Rational(4, 3) * (r**3)
+    return item(k, f"A sphere has radius {r}. What is its volume?", f"Sharning radiusi {r}. Hajmi necha?", f"{fmt(sphere)}π", f"(4/3)π×{r}³ = {fmt(sphere)}π.", f"(4/3)π×{r}³ = {fmt(sphere)}π.", str(sphere))
+
+
+def g_circle(k: int) -> dict:
+    r = 2 + ((k // 3) % 20)
+    angles = [30, 36, 40, 45, 60, 72, 90, 120, 180]
+    angle = angles[(k // 60) % len(angles)]
+    kind = k % 3
+    if kind == 0:
+        arc = sp.Rational(angle, 360) * 2 * r
+        return item(k, f"A circle has radius {r}. What is the length of a {angle}° arc?", f"Radius {r}. {angle}° lik yoyning uzunligi necha?", f"{fmt(arc)}π", f"({angle}/360)×2π×{r} = {fmt(arc)}π.", f"({angle}/360)×2π×{r} = {fmt(arc)}π.", str(arc))
+    if kind == 1:
+        area = sp.Rational(angle, 360) * (r * r)
+        return item(k, f"A sector has radius {r} and central angle {angle}°. What is its area?", f"Sektorning radiusi {r}, markaziy burchagi {angle}°. Yuzi necha?", f"{fmt(area)}π", f"({angle}/360)×π×{r}² = {fmt(area)}π.", f"({angle}/360)×π×{r}² = {fmt(area)}π.", str(area))
+    squares = [r * r for r in range(2, 15)]
+    n = squares[k % len(squares)]
+    return item(k, f"A circle equation ends with = {n}. What is the radius?", f"Aylana tenglamasining o'ng tomoni {n}. Radius necha?", str(int(math.isqrt(n))), f"The radius is the square root of {n}, which is {int(math.isqrt(n))}.", f"Radius {n} ning kvadrat ildizi, ya'ni {int(math.isqrt(n))}.", str(int(math.isqrt(n))))
+
+
+def g_timing(k: int) -> dict:
+    kind = k % 4
+    if kind == 0:
+        modules = 2
+        each = 8 + ((k // 4) % 30)
+        return item(k, f"A test has {modules} modules of {each} questions. How many questions is that?", f"Sinovda {modules} modul, har birida {each} savol. Jami nechta savol?", str(modules * each), f"{modules} × {each} = {modules * each}.", f"{modules} × {each} = {modules * each}.", str(modules * each))
+    if kind == 1:
+        minutes = 5 + ((k // 4) % 40)
+        return item(k, f"How many seconds are in {minutes} minutes?", f"{minutes} daqiqada necha soniya bor?", str(minutes * 60), f"{minutes} × 60 = {minutes * 60}.", f"{minutes} × 60 = {minutes * 60}.", str(minutes * 60))
+    if kind == 2:
+        left_min = 4 + ((k // 4) % 40)
+        left_q = 2 + ((k // 160) % 15)
+        value = sp.Rational(left_min, left_q)
+        return item(k, f"{left_min} minutes remain for {left_q} questions. How many minutes is that per question?", f"{left_q} savolga {left_min} daqiqa qoldi. Bitta savolga necha daqiqa?", fmt(value), f"{left_min}/{left_q} = {fmt(value)}.", f"{left_min}/{left_q} = {fmt(value)}.", str(value))
+    answered = (k // 4) % 23
+    return item(k, f"A 22-question module has {answered} answers filled. How many are still blank?", f"22 savollik modulda {answered} javob yozilgan. Nechtasi hali bo'sh?", str(22 - answered), f"22 − {answered} = {22 - answered}.", f"22 − {answered} = {22 - answered}.", str(22 - answered))
+
+
+def g_stems(k: int) -> dict:
+    kind = k % 3
+    if kind == 0:
+        a = 2 + ((k // 3) % 20)
+        product = a * (2 + ((k // 60) % 12))
+        x0 = product // a
+        return item(k, f"What is the value of x if {a}x = {product}?", f"{a}x = {product} bo'lsa, x ning qiymati necha?", str(x0), f"Divide by {a}. x = {x0}.", f"{a} ga bo'ling. x = {x0}.", str(x0))
+    if kind == 1:
+        y = 1 + ((k // 3) % 25)
+        total = y + 2 + ((k // 75) % 20)
+        x0 = total - y
+        return item(k, f"Express x in terms of a number: x + {y} = {total}. What is x?", f"x + {y} = {total}. x necha?", str(x0), f"x = {total} − {y} = {x0}.", f"x = {total} − {y} = {x0}.", str(x0))
+    add = 1 + ((k // 3) % 25)
+    right = add + 1 + ((k // 75) % 20)
+    return item(k, f"Which number satisfies x + {add} = {right}? Give that number.", f"x + {add} = {right} ni qanoatlantiradigan son necha?", str(right - add), f"x = {right} − {add} = {right - add}.", f"x = {right} − {add} = {right - add}.", str(right - add))
+
+
+def g_hand(k: int) -> dict:
+    p = 5 * (1 + ((k // 2) % 18))
+    n = 4 * (3 + ((k // 40) % 25))
+    value = sp.Rational(p, 100) * n
+    return item(
+        k,
+        f"What is {p}% of {n}? Compute it as a fraction before any decimal keystroke.",
+        f"{n} ning {p} foizi necha? Avval kasr bilan hisoblang.",
+        fmt(value),
+        f"({p}/100) × {n} = {fmt(value)}.",
+        f"({p}/100) × {n} = {fmt(value)}.",
+        expr=str(value),
+    )
+
+
+def g_traps(k: int) -> dict:
+    kind = k % 3
+    if kind == 0:
+        p = 5 * (1 + ((k // 3) % 16))
+        n = 10 * (2 + ((k // 48) % 16))
+        value = sp.Rational(p, 100) * n
+        return item(k, f"A student divides {n} by {p} for {p}% of {n}. What is the correct value?", f"O'quvchi {n} ning {p} foizini {n}/{p} deb oladi. To'g'ri qiymat necha?", fmt(value), f"Percent multiplies. ({p}/100)×{n} = {fmt(value)}.", f"Foiz ko'paytiradi. ({p}/100)×{n} = {fmt(value)}.", str(value))
+    if kind == 1:
+        old = 10 * (2 + ((k // 3) % 18))
+        new = old + 5 * (1 + ((k // 54) % 12))
+        value = sp.Rational(new - old, old) * 100
+        return item(k, f"A value goes from {old} to {new}. A student divides the change by {new}. What is the correct percent increase?", f"Qiymat {old} dan {new} ga o'tadi. O'quvchi o'zgarishni {new} ga bo'ladi. To'g'ri o'sish foizi necha?", f"{fmt(value)}%", f"Divide by the original {old}. The increase is {fmt(value)}%.", f"Eski son {old} ga bo'ling. O'sish {fmt(value)}%.", str(value))
+    r = 2 + ((k // 3) % 30)
+    return item(k, f"A circle has radius {r}. A student squares the diameter. What is the correct area?", f"Radius {r}. O'quvchi diametrni kvadratga oladi. To'g'ri yuza necha?", f"{r * r}π", f"Area uses the radius. π×{r}² = {r * r}π.", f"Yuza radiusni oladi. π×{r}² = {r * r}π.", str(r * r))
+
+
+BUILDERS = {
+    "0.1": g_fractions,
+    "1.1": g_abs,
+    "1.2": g_order,
+    "1.3": g_decimals,
+    "1.4": g_percent,
+    "1.5": g_change,
+    "1.6": g_ratio,
+    "1.7": g_prop,
+    "1.8": g_exp,
+    "1.9": g_roots,
+    "1.10": g_sci,
+    "2.1": g_expr,
+    "2.2": g_linear,
+    "2.3": g_frac_eq,
+    "2.4": g_ineq,
+    "2.5": g_words,
+    "2.6": g_slope,
+    "2.7": g_system,
+    "2.8": g_func,
+    "3.1": g_poly,
+    "3.2": g_factor,
+    "3.3": g_quad,
+    "3.4": g_vertex,
+    "3.5": g_equiv,
+    "3.6": g_rational,
+    "3.7": g_radical,
+    "3.8": g_exp_growth,
+    "4.1": g_context_ratio,
+    "4.2": g_table,
+    "4.3": g_stats,
+    "4.4": g_fit,
+    "4.5": g_prob,
+    "4.6": g_margin,
+    "5.1": g_angles,
+    "5.2": g_similar,
+    "5.3": g_pythag,
+    "5.4": g_trig,
+    "5.5": g_area,
+    "5.6": g_volume,
+    "5.7": g_circle,
+    "6.1": g_timing,
+    "6.2": g_stems,
+    "6.3": g_hand,
+    "6.4": g_traps,
+}
+
+
+def _check_expr(row: dict) -> None:
+    expr = row.get("expr") or ""
+    if expr in ("", "0"):
+        return
+    if "," in expr and not expr.startswith("("):
+        return
+    got = fmt(sp.sympify(expr))
+    answer = row["answer"].replace("%", "").replace("π", "").strip()
+    answer = answer.split(" or ")[0].replace("x = ", "").replace("x < ", "").replace("x > ", "").strip()
+    if got != answer and not answer.endswith(got) and got not in row["answer"]:
+        raise AssertionError(f"{row['promptEn']}: {got} vs {row['answer']}")
+
+
+def build_bank() -> dict[str, list[dict]]:
+    if set(BUILDERS) != set(CODES):
+        raise RuntimeError(f"builder mismatch {set(CODES) - set(BUILDERS)}")
+    bank: dict[str, list[dict]] = {}
+    for code, builder in BUILDERS.items():
+        rows = take(builder)
+        if len(rows) < 100:
+            raise RuntimeError(code)
+        for row in rows:
+            _check_expr(row)
+        bank[code] = rows
+    return bank
+
+
+if __name__ == "__main__":
+    data = build_bank()
+    print(len(data), "lessons", min(len(v) for v in data.values()))
