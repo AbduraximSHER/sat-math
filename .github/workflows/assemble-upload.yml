@@ -27,13 +27,17 @@ jobs:
               'User-Agent': 'assemble-upload',
           }
 
+          def api_json(url, method='GET', body=None):
+              data = None if body is None else json.dumps(body).encode()
+              req = urllib.request.Request(url, data=data, method=method, headers={**headers, **({'Content-Type':'application/json'} if body else {})})
+              with urllib.request.urlopen(req) as r:
+                  return json.load(r)
+
           def put_file(path: str, content: bytes, message: str):
               api = f'https://api.github.com/repos/{repo}/contents/{path}'
               sha = None
-              req = urllib.request.Request(api + '?ref=main', headers=headers)
               try:
-                  with urllib.request.urlopen(req) as r:
-                      sha = json.load(r)['sha']
+                  sha = api_json(api + '?ref=main')['sha']
               except urllib.error.HTTPError as e:
                   if e.code != 404:
                       raise
@@ -44,14 +48,22 @@ jobs:
               }
               if sha:
                   body['sha'] = sha
-              data = json.dumps(body).encode()
-              req = urllib.request.Request(
-                  api, data=data, method='PUT',
-                  headers={**headers, 'Content-Type': 'application/json'},
-              )
-              with urllib.request.urlopen(req) as r:
-                  out = json.load(r)
-                  print('updated', out['content']['path'], 'size', out['content']['size'])
+              out = api_json(api, method='PUT', body=body)
+              print('updated', out['content']['path'], 'size', out['content']['size'])
+
+          def delete_file(path: str, message: str):
+              api = f'https://api.github.com/repos/{repo}/contents/{path}'
+              try:
+                  meta = api_json(api + '?ref=main')
+              except urllib.error.HTTPError as e:
+                  if e.code == 404:
+                      return
+                  raise
+              body = {'message': message, 'sha': meta['sha'], 'branch': 'main'}
+              api_json(api, method='DELETE', body=body)
+              print('deleted', path)
+
+          assembled = []
 
           # 1) gzip single-file uploads
           gz_dir = Path('guide/_upload/gz')
@@ -62,11 +74,17 @@ jobs:
                       target = f"guide/content/{slug[len('content__'):]}.py"
                   else:
                       target = f"guide/{slug}.py"
-                  data = gzip.decompress(base64.b64decode(p.read_text().strip()))
+                  try:
+                      data = gzip.decompress(base64.b64decode(p.read_text().strip()))
+                  except Exception as e:
+                      print(f'skip corrupt gz {p.name}: {e}')
+                      continue
                   print(f'gz assemble {target} bytes {len(data)}')
                   put_file(target, data, f'Assemble {target} from gzip upload')
+                  assembled.append(target)
+                  delete_file(f'guide/_upload/gz/{p.name}', f'Cleanup gz after assembling {target}')
 
-          # 2) legacy multi-part uploads (only if complete set exists via manifest)
+          # 2) legacy multi-part uploads
           upload_root = Path('guide/_upload')
           manifest_path = upload_root / 'manifest.json'
           if manifest_path.exists():
@@ -86,4 +104,9 @@ jobs:
                   data = b''.join(base64.b64decode(p.read_text().strip()) for p in part_files)
                   print(f'part assemble {target} bytes {len(data)}')
                   put_file(target, data, f'Assemble {target} from upload parts')
+                  assembled.append(target)
+                  for p in part_files:
+                      delete_file(f'guide/_upload/{slug}/{p.name}', f'Cleanup part after assembling {target}')
+
+          print('assembled', assembled)
           PY
