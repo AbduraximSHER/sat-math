@@ -133,5 +133,33 @@ jobs:
                   for p in part_files:
                       delete_file(f'guide/_upload/{slug}/{p.name}', f'Cleanup part after assembling {target}')
 
+          # 3) content/* directories gated by EXPECTED
+          content_root = Path('guide/_upload/content')
+          if content_root.is_dir():
+              for d in sorted(content_root.iterdir()):
+                  if not d.is_dir():
+                      continue
+                  expected_path = d / 'EXPECTED'
+                  if not expected_path.exists():
+                      print(f'skip {d.name}: no EXPECTED')
+                      continue
+                  expected = int(expected_path.read_text().strip())
+                  name = d.name
+                  if name.startswith('guide_content_'):
+                      target = f"guide/content/{name[len('guide_content_'):]}.py"
+                  else:
+                      target = f"guide/content/{name}.py"
+                  part_files = sorted(d.glob('*.b64'))
+                  if len(part_files) < expected:
+                      print(f'skip incomplete {d.name}: {len(part_files)}/{expected}')
+                      continue
+                  data = b''.join(base64.b64decode(p.read_text().strip()) for p in part_files[:expected])
+                  print(f'content assemble {target} bytes {len(data)} from {expected} parts')
+                  put_file(target, data, f'Assemble {target} from content upload parts')
+                  assembled.append(target)
+                  for p in part_files[:expected]:
+                      delete_file(f'guide/_upload/content/{d.name}/{p.name}', f'Cleanup part after assembling {target}')
+                  delete_file(f'guide/_upload/content/{d.name}/EXPECTED', f'Cleanup EXPECTED after assembling {target}')
+
           print('assembled', assembled)
           PY
