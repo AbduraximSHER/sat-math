@@ -109,4 +109,4 @@ def g_abs(k: int) -> dict:
             f"Evaluate |−{n}|.",
             f"|−{n}| ning qiymatini toping.",
             answer,
-            f"The"}, {
+            f"The"},{
