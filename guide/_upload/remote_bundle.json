@@ -1,18 +1,16 @@
 {
-  "sha256": "010037a0697d4121dea0173849822de812f584b62ba74878ef96131f187e3a37",
+  "sha256": "d066a8f8f3c428f2484a0330a853819cf41fb0ee13667313bf1d65f49547ff7c",
   "urls": [
-    "https://pomf2.lain.la/f/8fchuxwx.tar.gz",
-    "https://tmpfiles.org/dl/1794864627.a1667462463a74d3/w2Alyy8ojMnz/guide-bundle.tar.gz"
+    "https://tmpfiles.org/dl/1794864947.87d9a9b7b950be32/w1AEyd8jQJgj/site-extras2.tar.gz"
   ],
   "files": {
-    "guide/content/u1a.py": 52070,
-    "guide/content/u1b.py": 51218,
-    "guide/content/u2_algebra.py": 79855,
-    "guide/content/u3a.py": 39346,
-    "guide/content/u3b.py": 38887,
-    "guide/content/u4_data.py": 61534,
-    "guide/content/u5_geometry.py": 69917,
-    "guide/content/u6_craft.py": 41752,
-    "guide/depth.py": 45883
+    "site/package-lock.json": 460360,
+    "site/data/keys.json": 960810,
+    "site/public/figures/circle.png": 32679,
+    "site/public/figures/line_slope.png": 39171,
+    "site/public/figures/number_line.png": 14383,
+    "site/public/figures/parabola.png": 59005,
+    "site/public/figures/scatter.png": 41296,
+    "site/public/figures/triangle.png": 10744
   }
 }
