@@ -69,3 +69,44 @@ def take(gen) -> list[dict]:
     for index, row in enumerate(rows, start=1):
         row["id"] = f"{index:03d}"
     return rows
+
+
+def g_fractions(k: int) -> dict:
+    op = k % 4
+    a, b = 1 + (k % 9), 2 + ((k // 2) % 8)
+    c, d = 1 + ((k * 3) % 8), 2 + ((k * 5) % 7)
+    left, right = sp.Rational(a, b), sp.Rational(c, d)
+    if op == 0:
+        value = left + right
+        sign, word, suz = "+", "sum", "yig'indisi"
+    elif op == 1:
+        if left < right:
+            left, right = right, left
+            a, b, c, d = c, d, a, b
+        value = left - right
+        sign, word, suz = "−", "difference", "ayirmasi"
+    elif op == 2:
+        value = left * right
+        sign, word, suz = "×", "product", "ko'paytmasi"
+    else:
+        value = left / right
+        sign, word, suz = "÷", "quotient", "bo'linmasi"
+    answer = fmt(value)
+    en = f"Find the {word} {a}/{b} {sign} {c}/{d} as a simplified fraction."
+    uz = f"{a}/{b} {sign} {c}/{d} ning {suz}ni qisqartirilgan kasrda toping."
+    sen = f"Compute {a}/{b} {sign} {c}/{d}. The simplified value is {answer}."
+    suz_s = f"{a}/{b} {sign} {c}/{d} ni hisoblang. Qisqartirilgan qiymat {answer}."
+    return item(k, en, uz, answer, sen, suz_s, expr=str(value))
+
+
+def g_abs(k: int) -> dict:
+    kind = k % 3
+    if kind == 0:
+        n = k + 1
+        answer = str(n)
+        return item(
+            k,
+            f"Evaluate |−{n}|.",
+            f"|−{n}| ning qiymatini toping.",
+            answer,
+            f"The"},{
