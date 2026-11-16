@@ -836,4 +836,302 @@ def g_rational(k: int) -> dict:
     x0 = sp.Rational(p, q)
     return item(
         k,
-        f"Solve {p}/x = {q}."
+        f"Solve {p}/x = {q}.",
+        f"{p}/x = {q} tenglamasini yeching.",
+        fmt(x0),
+        f"x = {p}/{q} = {fmt(x0)}. Zero is excluded.",
+        f"x = {p}/{q} = {fmt(x0)}. Nol istisno.",
+        expr=str(x0),
+    )
+
+
+def g_radical(k: int) -> dict:
+    root = 2 + (k % 25)
+    added = (k // 25) % 30
+    x0 = root**2 - added
+    if x0 < 0:
+        added = 0
+        x0 = root**2
+    return item(
+        k,
+        f"Solve √(x + {added}) = {root}.",
+        f"√(x + {added}) = {root} tenglamasini yeching.",
+        str(x0),
+        f"Square: x + {added} = {root**2}, so x = {x0}. The check passes because the root is nonnegative.",
+        f"Kvadrat: x + {added} = {root**2}, demak x = {x0}. Ildiz manfiy emas, tekshiruv o'tadi.",
+        expr=str(x0),
+    )
+
+
+def g_exp_growth(k: int) -> dict:
+    start = 4 * (1 + (k % 30))
+    times = 1 + ((k // 30) % 6)
+    value = start * (2**times)
+    return item(
+        k,
+        f"A quantity starts at {start} and doubles {times} time{'s' if times != 1 else ''}. What is the result?",
+        f"Miqdor {start} dan boshlanadi va {times} marta ikki baravar bo'ladi. Natija necha?",
+        str(value),
+        f"{start} × 2^{times} = {value}.",
+        f"{start} × 2^{times} = {value}.",
+        expr=str(value),
+    )
+
+
+def g_context_ratio(k: int) -> dict:
+    red = 1 + (k % 10)
+    blue = 1 + ((k // 10) % 10)
+    scale = 1 + ((k // 100) % 8)
+    total = (red + blue) * scale
+    answer = red * scale
+    return item(
+        k,
+        f"Red and blue paint are mixed {red}:{blue}. How many liters of red are in {total} liters of mixture?",
+        f"Qizil va ko'k bo'yoq {red}:{blue} aralashadi. {total} litr aralashmada necha litr qizil bor?",
+        str(answer),
+        f"Red is {red}/{red + blue} of the mixture, which is {answer} liters.",
+        f"Qizil aralashmaning {red}/{red + blue} qismi, ya'ni {answer} litr.",
+        expr=str(answer),
+    )
+
+
+def g_table(k: int) -> dict:
+    slope = 1 + (k % 7)
+    intercept = k % 10
+    x0 = 3 + (k % 8)
+    y0 = slope * x0 + intercept
+    return item(
+        k,
+        f"The rule y = {slope}x + {intercept} fits a table. What is y when x = {x0}?",
+        f"y = {slope}x + {intercept} qoidasi jadvalga mos. x = {x0} bo'lganda y necha?",
+        str(y0),
+        f"Substitute: {slope}×{x0} + {intercept} = {y0}.",
+        f"Qo'ying: {slope}×{x0} + {intercept} = {y0}.",
+        expr=str(y0),
+    )
+
+
+def g_stats(k: int) -> dict:
+    a = 1 + (k % 40)
+    b = a + 1 + ((k // 40) % 12)
+    c = b + 1 + ((k // 480) % 8)
+    kind = k % 3
+    if kind == 0:
+        mean = sp.Rational(a + b + c, 3)
+        return item(
+            k,
+            f"What is the mean of {a}, {b}, and {c}?",
+            f"{a}, {b} va {c} ning o'rta arifmetigi necha?",
+            fmt(mean),
+            f"The sum is {a + b + c}. Divide by 3 to get {fmt(mean)}.",
+            f"Yig'indi {a + b + c}. 3 ga bo'ling: {fmt(mean)}.",
+            expr=str(mean),
+        )
+    if kind == 1:
+        return item(
+            k,
+            f"What is the median of {c}, {a}, {b}?",
+            f"{c}, {a}, {b} sonlarining medianasi necha?",
+            str(b),
+            f"Sorted, the list is {a}, {b}, {c}. The middle is {b}.",
+            f"Tartiblanganda {a}, {b}, {c}. O'rtasi {b}.",
+            expr=str(b),
+        )
+    return item(
+        k,
+        f"What is the range of {a}, {c}, {b}?",
+        f"{a}, {c}, {b} sonlarining qamrovi necha?",
+        str(c - a),
+        f"Largest minus smallest is {c} − {a} = {c - a}.",
+        f"Eng katta minus eng kichik: {c} − {a} = {c - a}.",
+        expr=str(c - a),
+    )
+
+
+def g_fit(k: int) -> dict:
+    slope = (k % 9) - 3
+    if slope == 0:
+        slope = 2
+    intercept = k % 8
+    x0 = 1 + (k % 10)
+    pred = slope * x0 + intercept
+    actual = pred + ((k % 5) - 2)
+    residual = actual - pred
+    if k % 2 == 0:
+        return item(
+            k,
+            f"A line of fit is y = {slope}x + {intercept}. What does it predict at x = {x0}?",
+            f"Mos chiziq y = {slope}x + {intercept}. x = {x0} dagi bashorat necha?",
+            str(pred),
+            f"{slope}×{x0} + {intercept} = {pred}.",
+            f"{slope}×{x0} + {intercept} = {pred}.",
+            expr=str(pred),
+        )
+    return item(
+        k,
+        f"The prediction is {pred} and the actual value is {actual}. What is the residual?",
+        f"Bashorat {pred}, haqiqiy qiymat {actual}. Qoldiq necha?",
+        str(residual),
+        f"Residual = actual − predicted = {actual} − {pred} = {residual}.",
+        f"Qoldiq = haqiqiy − bashorat = {actual} − {pred} = {residual}.",
+        expr=str(residual),
+    )
+
+
+def g_prob(k: int) -> dict:
+    red = 1 + (k % 15)
+    blue = 1 + ((k // 15) % 12)
+    green = 1 + ((k // 180) % 10)
+    total = red + blue + green
+    which = k % 3
+    count = (red, blue, green)[which]
+    name = ("red", "blue", "green")[which]
+    uz = ("qizil", "ko'k", "yashil")[which]
+    value = sp.Rational(count, total)
+    return item(
+        k,
+        f"A bag has {red} red, {blue} blue, and {green} green marbles. What is the probability of {name}?",
+        f"Qopda {red} qizil, {blue} ko'k va {green} yashil marmar bor. {uz.capitalize()} ehtimoli necha?",
+        fmt(value),
+        f"{count} favorable out of {total}. The probability is {fmt(value)}.",
+        f"{total} tadan {count} qulay. Ehtimollik {fmt(value)}.",
+        expr=str(value),
+    )
+
+
+def g_margin(k: int) -> dict:
+    estimate = 20 + (k % 60)
+    margin = 1 + (k % 8)
+    if k % 2 == 0:
+        answer = estimate - margin
+        edge, chekka = "lower", "past"
+    else:
+        answer = estimate + margin
+        edge, chekka = "upper", "yuqori"
+    return item(
+        k,
+        f"An estimate is {estimate}% with a margin of error of {margin} percentage points. What is the {edge} end?",
+        f"Taxmin {estimate}%, xato chegarasi {margin} foiz punkti. {chekka.capitalize()} chekka necha?",
+        str(answer),
+        f"{estimate} {'−' if edge == 'lower' else '+'} {margin} = {answer}.",
+        f"{estimate} {'−' if edge == 'lower' else '+'} {margin} = {answer}.",
+        expr=str(answer),
+    )
+
+
+def g_angles(k: int) -> dict:
+    kind = k % 3
+    if kind == 0:
+        given = 15 + (k % 140)
+        other = 180 - given
+        return item(
+            k,
+            f"An angle of {given}° sits on a straight line. What is the adjacent angle?",
+            f"{given}° li burchak to'g'ri chiziqda turadi. Qo'shni burchak necha gradus?",
+            str(other),
+            f"180 − {given} = {other}.",
+            f"180 − {given} = {other}.",
+            expr=str(other),
+        )
+    if kind == 1:
+        given = 10 + (k % 70)
+        other = 90 - given
+        return item(
+            k,
+            f"What is the complement of a {given}° angle?",
+            f"{given}° li burchakning to'ldiruvchisi necha gradus?",
+            str(other),
+            f"90 − {given} = {other}.",
+            f"90 − {given} = {other}.",
+            expr=str(other),
+        )
+    a = 20 + (k % 50)
+    return item(
+        k,
+        f"Two lines cross and one angle is {a}°. What is the vertical angle?",
+        f"Ikki chiziq kesishadi va bitta burchak {a}°. Vertikal burchak necha?",
+        str(a),
+        f"Vertical angles are equal, so the angle is {a}°.",
+        f"Vertikal burchaklar teng, demak burchak {a}°.",
+        expr=str(a),
+    )
+
+
+def g_similar(k: int) -> dict:
+    factor = 2 + (k % 12)
+    side = 2 + ((k // 12) % 30)
+    return item(
+        k,
+        f"Similar triangles have scale factor {factor}. A side of {side} corresponds to what length?",
+        f"O'xshash uchburchaklarning masshtabi {factor}. {side} tomonga qanday uzunlik mos?",
+        str(side * factor),
+        f"{side} × {factor} = {side * factor}.",
+        f"{side} × {factor} = {side * factor}.",
+        expr=str(side * factor),
+    )
+
+
+def g_pythag(k: int) -> dict:
+    triples = [(3, 4, 5), (5, 12, 13), (6, 8, 10), (7, 24, 25), (8, 15, 17), (9, 12, 15), (9, 40, 41), (20, 21, 29), (12, 16, 20), (12, 35, 37), (11, 60, 61), (28, 45, 53)]
+    a, b, c = triples[k % len(triples)]
+    scale = 1 + ((k // len(triples)) % 12)
+    a, b, c = a * scale, b * scale, c * scale
+    if k % 2 == 0:
+        return item(
+            k,
+            f"A right triangle has legs {a} and {b}. What is the hypotenuse?",
+            f"To'g'ri burchakli uchburchakning katetlari {a} va {b}. Gipotenuza necha?",
+            str(c),
+            f"{a}² + {b}² = {c}², so the hypotenuse is {c}.",
+            f"{a}² + {b}² = {c}², demak gipotenuza {c}.",
+            expr=str(c),
+        )
+    return item(
+        k,
+        f"A right triangle has hypotenuse {c} and one leg {a}. What is the other leg?",
+        f"Gipotenuza {c} va bitta katet {a}. Ikkinchi katet necha?",
+        str(b),
+        f"√({c}² − {a}²) = {b}.",
+        f"√({c}² − {a}²) = {b}.",
+        expr=str(b),
+    )
+
+
+def g_trig(k: int) -> dict:
+    triples = [(3, 4, 5), (5, 12, 13), (8, 15, 17), (7, 24, 25), (9, 40, 41), (20, 21, 29), (12, 35, 37), (9, 12, 15), (28, 45, 53)]
+    scale = 1 + ((k // (len(triples) * 3)) % 5)
+    a, b, c = triples[k % len(triples)]
+    a, b, c = a * scale, b * scale, c * scale
+    which = (k // len(triples)) % 3
+    if which == 0:
+        name, uz, value = "sine", "sinusi", sp.Rational(a, c)
+    elif which == 1:
+        name, uz, value = "cosine", "kosinusi", sp.Rational(b, c)
+    else:
+        name, uz, value = "tangent", "tangensi", sp.Rational(a, b)
+    return item(
+        k,
+        f"In a right triangle with opposite {a}, adjacent {b}, and hypotenuse {c}, what is the {name}?",
+        f"Qarama-qarshi {a}, yondosh {b}, gipotenuza {c} bo'lgan to'g'ri burchakli uchburchakda {uz} necha?",
+        fmt(value),
+        f"The {name} is {fmt(value)}.",
+        f"{uz.capitalize()} {fmt(value)}.",
+        expr=str(value),
+    )
+
+
+def g_area(k: int) -> dict:
+    kind = k % 4
+    if kind == 0:
+        base, height = 2 + ((k // 4) % 30), 2 + ((k // 120) % 20)
+        value = sp.Rational(base * height, 2)
+        return item(k, f"A triangle has base {base} and height {height}. What is its area?", f"Uchburchakning asosi {base}, balandligi {height}. Yuzi necha?", fmt(value), f"(1/2)×{base}×{height} = {fmt(value)}.", f"(1/2)×{base}×{height} = {fmt(value)}.", str(value))
+    if kind == 1:
+        length, width = 2 + ((k // 4) % 28), 2 + ((k // 112) % 16)
+        return item(k, f"A rectangle is {length} by {width}. What is its area?", f"To'g'ri to'rtburchak {length} ga {width}. Yuzi necha?", str(length * width), f"{length}×{width} = {length * width}.", f"{length}×{width} = {length * width}.", str(length * width))
+    if kind == 2:
+        r = 1 + ((k // 4) % 24)
+        return item(k, f"A circle has radius {r}. What is its area?", f"Aylananing radiusi {r}. Yuzi necha?", f"{r * r}π", f"π×{r}² = {r * r}π.", f"π×{r}² = {r * r}π.", str(r * r))
+    b1, b2, h = 2 + ((k // 4) % 16), 4 + ((k // 64) % 18), 2 + ((k // 400) % 10)
+    value = sp.Rational(b1 + b2, 2) * h
+    return item(k, f"A trapezoid has bases {b1} and {b2} and height {h}. What is its area?", f"Trapetsiyaning asoslari {b1} va {b2}, balandlidi {h}. Yuzi necha?", fmt(value), f"Average the bases, then multiply by {h}. The
