@@ -19,6 +19,13 @@ export const metadata: Metadata = {
   title: "SAT Math — O'qituvchi qo'llanmasi",
   description:
     "Kasr amallaridan raqamli SAT Math gacha. Inglizcha va o'zbekcha darslar, misollar va o'qituvchi kaliti.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon" }],
+  },
 };
 
 const index = guide.units.map((unit) => ({
