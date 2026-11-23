@@ -3,7 +3,6 @@ on:
   push:
     paths:
       - ".payloads/**"
-      - ".github/workflows/apply-lesson-deepen.yml"
   workflow_dispatch:
 jobs:
   apply:
@@ -16,17 +15,21 @@ jobs:
         run: |
           python3 << 'PY'
           import pathlib, zlib, base64, subprocess, sys
+          def load_b64(stem: str) -> bytes:
+              single = pathlib.Path(f".payloads/{stem}.zlib.b64")
+              if single.exists():
+                  return base64.b64decode(single.read_text().strip())
+              parts = sorted(pathlib.Path(".payloads").glob(f"{stem}.zlib.b64.p*"))
+              if not parts:
+                  raise SystemExit(f"missing payload for {stem}")
+              return base64.b64decode("".join(p.read_text().strip() for p in parts))
           mapping = {
-              "guide/content/u1b.py": ".payloads/u1b.zlib.b64",
-              "guide/depth.py": ".payloads/depth.zlib.b64",
-              "guide/verify.py": ".payloads/verify.zlib.b64",
+              "guide/content/u1b.py": "u1b",
+              "guide/depth.py": "depth",
+              "guide/verify.py": "verify",
           }
-          for dest, src in mapping.items():
-              p = pathlib.Path(src)
-              if not p.exists():
-                  print("missing", src, file=sys.stderr)
-                  sys.exit(1)
-              raw = zlib.decompress(base64.b64decode(p.read_text().strip()))
+          for dest, stem in mapping.items():
+              raw = zlib.decompress(load_b64(stem))
               pathlib.Path(dest).write_bytes(raw)
               print("wrote", dest, len(raw))
           subprocess.check_call(["git", "config", "user.name", "github-actions[bot]"])
