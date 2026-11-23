@@ -660,6 +660,14 @@ def main() -> int:
         for error in errors:
             print(" -", error, file=sys.stderr)
         return 1
+    # The practice bank is generated and rechecked before anything is written.
+    from guide.bank import build_bank
+
+    try:
+        bank = build_bank()
+    except RuntimeError as exc:
+        print(exc, file=sys.stderr)
+        return 1
     figures = make_figures()
     missing = [
         lesson.figure
@@ -674,7 +682,7 @@ def main() -> int:
     build_sections(book)
     from guide.export_site import export_site
 
-    export_site()
+    export_site(render_figures=False, bank=bank)
     print(f"Wrote {DIST / 'SAT-Math-Teacher-Guide.docx'}")
     for name in dict.fromkeys(UNIT_FILES.values()):
         print(f"Wrote {DIST / name}")
