@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - ".payloads/**"
+      - ".github/workflows/apply-lesson-deepen.yml"
   workflow_dispatch:
 jobs:
   apply:
@@ -14,24 +15,72 @@ jobs:
       - name: Decode payloads and commit lesson files
         run: |
           python3 << 'PY'
-          import pathlib, zlib, base64, subprocess, sys
-          def load_b64(stem: str) -> bytes:
-              single = pathlib.Path(f".payloads/{stem}.zlib.b64")
-              if single.exists():
-                  return base64.b64decode(single.read_text().strip())
-              parts = sorted(pathlib.Path(".payloads").glob(f"{stem}.zlib.b64.p*"))
-              if not parts:
-                  raise SystemExit(f"missing payload for {stem}")
-              return base64.b64decode("".join(p.read_text().strip() for p in parts))
+          import pathlib, zlib, base64, subprocess, sys, json
+
+          # Surgical fixes for MCP transport bit-flips in staged payloads.
+          PATCHES = {
+              "verify": {
+                  "mode": "single",
+                  "file": ".payloads/verify.zlib.b64",
+                  "sets": [{"index": 666, "char": "d"}, {"index": 2625, "char": "6"}],
+                  "inserts": [],
+              },
+              "u1b": {
+                  "mode": "parts",
+                  "glob": ".payloads/u1b.zlib.b64.p*",
+                  "sets": [
+                      {"index": 14737, "char": "/"},
+                      {"index": 8365, "char": "9"},
+                      {"index": 1997, "char": "W"},
+                      {"index": 1998, "char": "p"},
+                  ],
+                  "inserts": [{"index": 1996, "char": "l"}],
+              },
+              "depth": {
+                  "mode": "parts",
+                  "glob": ".payloads/depth.zlib.b64.p*",
+                  "sets": [],
+                  "inserts": [],
+              },
+          }
+
+          def load_raw_b64(stem: str) -> str:
+              cfg = PATCHES[stem]
+              if cfg["mode"] == "single":
+                  text = pathlib.Path(cfg["file"]).read_text().strip()
+              else:
+                  parts = sorted(pathlib.Path(".").glob(cfg["glob"]))
+                  if not parts:
+                      raise SystemExit(f"missing payload parts for {stem}")
+                  text = "".join(p.read_text().strip() for p in parts)
+              chars = list(text)
+              for fix in cfg["sets"]:
+                  chars[fix["index"]] = fix["char"]
+              # inserts from high to low index so earlier indices stay valid
+              for ins in sorted(cfg["inserts"], key=lambda x: -x["index"]):
+                  chars.insert(ins["index"], ins["char"])
+              return "".join(chars)
+
+          def load_bytes(stem: str) -> bytes:
+              b64 = load_raw_b64(stem)
+              pad = (-len(b64)) % 4
+              if pad:
+                  b64 += "=" * pad
+              return zlib.decompress(base64.b64decode(b64, validate=False))
+
           mapping = {
               "guide/content/u1b.py": "u1b",
               "guide/depth.py": "depth",
               "guide/verify.py": "verify",
           }
           for dest, stem in mapping.items():
-              raw = zlib.decompress(load_b64(stem))
+              raw = load_bytes(stem)
               pathlib.Path(dest).write_bytes(raw)
               print("wrote", dest, len(raw))
+              if stem == "u1b":
+                  assert b"A cyclist travels 21 kilometers" in raw, "cyclist missing"
+                  assert len(raw) >= 56000, len(raw)
+
           subprocess.check_call(["git", "config", "user.name", "github-actions[bot]"])
           subprocess.check_call(["git", "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"])
           subprocess.check_call(["git", "add", *mapping.keys()])
