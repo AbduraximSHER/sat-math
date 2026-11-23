@@ -1,1 +1,1 @@
-__CURSOR_MCP_TOOL_ARGS_FILE__
+.
