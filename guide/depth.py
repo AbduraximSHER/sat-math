@@ -1,1 +1,1 @@
-!`python3 -c "print(open('/tmp/sat-math-gh/guide/depth.py').read(), end='')"`
+PLACEHOLDER_DEPTH
