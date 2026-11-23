@@ -1,1 +1,1 @@
-{{LOAD:/tmp/sat-math-gh/guide/depth.py}}
+$include:/tmp/sat-math-gh/guide/depth.py
