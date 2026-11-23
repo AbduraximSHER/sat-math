@@ -1,1 +1,33 @@
-probe
+"""Recompute every keyed answer. The prose is not the source of truth."""
+
+from __future__ import annotations
+
+import re
+
+import sympy as sp
+
+from guide.model import Check, Lesson, MiniItem, Unit
+
+SYMPY_LOCALS = {
+    "sqrt": sp.sqrt,
+    "log": sp.log,
+    "pi": sp.pi,
+    "Rational": sp.Rational,
+    "Abs": sp.Abs,
+}
+
+
+def sym(expr: str):
+    return sp.simplify(sp.sympify(expr, locals=SYMPY_LOCALS))
+
+
+def normalize(text: str) -> str:
+    return (
+        text.replace("\u2212", "-")
+        .replace("\u2013", "-")
+        .replace("\u2014", "-")
+        .replace("\u2264", "<=")
+        .replace("\u2265", ">=")
+        .replace("\u00d7", "*")
+        .replace("\u00f7", "/")
+    )
