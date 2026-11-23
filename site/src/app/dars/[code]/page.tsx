@@ -15,8 +15,6 @@ export function generateStaticParams() {
   return allLessons().map(({ lesson }) => ({ code: lesson.code }));
 }
 
-export const dynamicParams = false;
-
 export async function generateMetadata({ params }: { params: Promise<{ code: string }> }): Promise<Metadata> {
   const { code } = await params;
   const found = findLesson(decodeURIComponent(code));

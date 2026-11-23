@@ -73,3 +73,11 @@ jobs:
         run: npx opennextjs-cloudflare build
         env:
           NEXT_TELEMETRY_DISABLED: "1"
+
+      - name: Smoke test the worker on the Workers runtime
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: |
+          npx opennextjs-cloudflare populateCache local
+          npx wrangler dev --port 8787 --ip 127.0.0.1 --log-level warn > wrangler.log 2>&1 &
+          node scripts/smoke.mjs http://127.0.0.1:8787 || { tail -n 60 wrangler.log; exit 1; }
