@@ -1,1 +1,1 @@
-# test
+$__LOAD_FROM__/tmp/push_u1b_only.json
