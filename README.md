@@ -93,9 +93,11 @@ npm run preview
 
 ### Deploy
 
-`main` ga push → GitHub Actions avval CI ni yuritadi (Python tekshiruvi, lint, tiplar, testlar, worker yig'ish va Workers muhitida smoke-test), so'ng `npx opennextjs-cloudflare deploy` bilan Cloudflare'ga chiqaradi. Kerakli sirlar repoda bor: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
+Sayt `main` ga push bo'lganda **Cloudflare Workers Builds** orqali avtomatik deploy bo'ladi (repo Cloudflare dashboard'ida ulangan). Jonli saytda darslar tayyor sahifa sifatida beriladi.
 
-Agar Cloudflare dashboard'da Workers Builds ham ulangan bo'lsa, ikki marta deploy bo'lmasligi uchun bittasini qoldiring. Workers Builds'da deploy buyrug'i `npx opennextjs-cloudflare deploy` bo'lsin: u darslarni tayyor sahifa sifatida beradi.
+GitHub Actions `main` da va har PR da tekshiruvni yuritadi: Python tekshiruvi, lint, tiplar, testlar, worker yig'ish va Workers muhitida smoke-test. `main` da u deploy ham qila oladi (`npx opennextjs-cloudflare deploy`), lekin buning uchun repoda ikki sir kerak: `CLOUDFLARE_API_TOKEN` va `CLOUDFLARE_ACCOUNT_ID` (GitHub → Settings → Secrets and variables → Actions). Ular qo'yilmagan bo'lsa, deploy qadami o'zini o'tkazib yuboradi va yugurish yashil qoladi.
+
+Ikkalasi ham yoqilsa, har push ikki marta deploy bo'ladi. Zarari yo'q, lekin bittasi yetarli.
 
 ## Qayta yig'ish
 
