@@ -36628,23 +36628,23 @@
       "rows": [
         [
           "Foiz o'zgarishi",
-          "(yangi - eski) / eski"
+          "(yangi − eski) / eski"
         ],
         [
           "Qiyalik",
-          "(y2 - y1) / (x2 - x1)"
+          "(y₂ − y₁) / (x₂ − x₁)"
         ],
         [
           "Daraja",
-          "a^m · a^n = a^(m+n), a^m / a^n = a^(m-n), (a^m)^n = a^(mn)"
+          "a^m · a^n = a^(m+n), a^m / a^n = a^(m−n), (a^m)^n = a^(mn)"
         ],
         [
           "Nol daraja va manfiy daraja",
-          "a^0 = 1 (a ≠ 0), a^(-n) = 1/a^n"
+          "a^0 = 1 (a ≠ 0), a^(−n) = 1/a^n"
         ],
         [
           "Kvadrat formula",
-          "x = (-b ± √(b² - 4ac)) / (2a)"
+          "x = (−b ± √(b² − 4ac)) / (2a)"
         ],
         [
           "Yo'l",
@@ -36663,7 +36663,7 @@
           "qarama-qarshi/gipotenuza, yondosh/gipotenuza, qarama-qarshi/yondosh"
         ],
         [
-          "Qoshni burchaklar",
+          "Qo'shni burchaklar",
           "to'g'ri chiziqda 180°, to'g'ri burchakda 90°"
         ],
         [
