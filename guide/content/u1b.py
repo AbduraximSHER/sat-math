@@ -1,1 +1,1 @@
-$__LOAD_FROM__/tmp/push_u1b_only.json
+$jsonFile:/tmp/push_both_inline_args.json#/files/0/content
