@@ -1,0 +1,42 @@
+name: Apply lesson deepen payloads
+on:
+  push:
+    paths:
+      - ".payloads/**"
+      - ".github/workflows/apply-lesson-deepen.yml"
+  workflow_dispatch:
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode payloads and commit lesson files
+        run: |
+          python3 << 'PY'
+          import pathlib, zlib, base64, subprocess, sys
+          mapping = {
+              "guide/content/u1b.py": ".payloads/u1b.zlib.b64",
+              "guide/depth.py": ".payloads/depth.zlib.b64",
+              "guide/verify.py": ".payloads/verify.zlib.b64",
+          }
+          for dest, src in mapping.items():
+              p = pathlib.Path(src)
+              if not p.exists():
+                  print("missing", src, file=sys.stderr)
+                  sys.exit(1)
+              raw = zlib.decompress(base64.b64decode(p.read_text().strip()))
+              pathlib.Path(dest).write_bytes(raw)
+              print("wrote", dest, len(raw))
+          subprocess.check_call(["git", "config", "user.name", "github-actions[bot]"])
+          subprocess.check_call(["git", "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"])
+          subprocess.check_call(["git", "add", *mapping.keys()])
+          st = subprocess.run(["git", "diff", "--cached", "--quiet"])
+          if st.returncode == 0:
+              print("no changes")
+              sys.exit(0)
+          msg = """Deepen lesson 1.6: richer ratio explanations and more worked examples.\n\nAdd four bilingual worked examples, longer teacher/explain text, two more practice items, and a unit-conversion mistake. Allow lessons to carry more than two examples in verify."""
+          subprocess.check_call(["git", "commit", "-m", msg])
+          subprocess.check_call(["git", "push"])
+          PY
