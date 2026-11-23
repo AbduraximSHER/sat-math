@@ -122,8 +122,9 @@ def formula_tables() -> list[dict]:
     return tables
 
 
-def export_site() -> tuple[Path, Path]:
-    make_figures()
+def export_site(*, render_figures: bool = True) -> tuple[Path, Path]:
+    if render_figures:
+        make_figures()
     enriched, public_bank, lesson_keys = build_public_and_keys(UNITS)
     payload = {
         "units": [unit_json(unit, public_bank) for unit in enriched],
@@ -144,11 +145,14 @@ def export_site() -> tuple[Path, Path]:
         ],
     }
     DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
-    DATA_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    KEYS_PATH.write_text(json.dumps(keys_payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    DATA_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    KEYS_PATH.write_text(json.dumps(keys_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    # The site shows vector figures. PNGs stay in guide/assets for the Word book.
     PUBLIC_FIGURES.mkdir(parents=True, exist_ok=True)
-    for image in ASSET_DIR.glob("*.png"):
-        shutil.copy2(image, PUBLIC_FIGURES / image.name)
+    for stale in PUBLIC_FIGURES.glob("*.png"):
+        stale.unlink()
+    for image in sorted(ASSET_DIR.glob("*.svg")):
+        shutil.copyfile(image, PUBLIC_FIGURES / image.name)
     return DATA_PATH, KEYS_PATH
 
 

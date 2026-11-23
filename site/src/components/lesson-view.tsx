@@ -113,10 +113,11 @@ export function LessonView({
       {lesson.figure && (
         <figure className="my-8">
           <Image
-            src={`/figures/${lesson.figure}.png`}
+            src={`/figures/${lesson.figure}.svg`}
             alt={lesson.figureCaptionEn}
             width={1200}
             height={720}
+            unoptimized
             className="mx-auto h-auto w-full rounded-lg border border-[#e4ddd0] bg-white"
           />
           <figcaption className="mt-2 space-y-1 text-center text-sm text-[#5c6b73]">

@@ -674,7 +674,7 @@ def main() -> int:
     build_sections(book)
     from guide.export_site import export_site
 
-    export_site()
+    export_site(render_figures=False)
     print(f"Wrote {DIST / 'SAT-Math-Teacher-Guide.docx'}")
     for name in dict.fromkeys(UNIT_FILES.values()):
         print(f"Wrote {DIST / name}")

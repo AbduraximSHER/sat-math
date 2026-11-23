@@ -35,14 +35,21 @@ def _style() -> None:
             "figure.facecolor": "white",
             "savefig.facecolor": "white",
             "axes.linewidth": 1.1,
+            # Text becomes outlines from the font matplotlib ships, and ids come
+            # from a fixed salt, so the SVG is byte-identical on every machine.
+            "svg.fonttype": "path",
+            "svg.hashsalt": "sat-math",
         }
     )
 
 
 def _save(fig: plt.Figure, name: str) -> Path:
+    """Write a print PNG for the Word book and a vector SVG for the website."""
     ASSET_DIR.mkdir(parents=True, exist_ok=True)
     path = ASSET_DIR / f"{name}.png"
-    fig.savefig(path, dpi=160, bbox_inches="tight", pad_inches=0.18)
+    options = dict(bbox_inches="tight", pad_inches=0.18)
+    fig.savefig(path, dpi=300, **options)
+    fig.savefig(ASSET_DIR / f"{name}.svg", metadata={"Date": None}, **options)
     plt.close(fig)
     return path
 

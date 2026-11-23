@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  content:
+    name: Content (SymPy checks, site data)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - run: python -m pip install -r requirements.txt
+
+      - name: Recompute every answer and build the Word books
+        run: python -m guide.build_guide
+
+      - name: Committed site data matches the Python source
+        run: |
+          stale="$(git status --porcelain -- site/data site/public/figures)"
+          if [ -n "$stale" ]; then
+            echo "$stale"
+            git diff --stat -- site/data site/public/figures
+            echo "::error::site/data or site/public/figures is out of date. Run 'python3 -m guide.build_guide' and commit the result."
+            exit 1
+          fi
+
+      - name: Upload the Word books
+        uses: actions/upload-artifact@v6
+        with:
+          name: word-books
+          path: dist/*.docx
+          if-no-files-found: error
+          retention-days: 30
+
+  site:
+    name: Site (lint, types, tests, build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - name: Build the Cloudflare worker
+        run: npx opennextjs-cloudflare build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"

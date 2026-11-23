@@ -5,21 +5,40 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# A burst of pushes deploys once: newer runs wait, older pending runs are dropped.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
 jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
   deploy:
+    needs: ci
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: site
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: site/package-lock.json
+
       - run: npm ci
-      - run: npx opennextjs-cloudflare build
+
+      - name: Build the Cloudflare worker
+        run: npx opennextjs-cloudflare build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:

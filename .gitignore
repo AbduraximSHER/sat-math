@@ -2,3 +2,7 @@ __pycache__/
 *.py[cod]
 .venv/
 *.egg-info/
+
+# build outputs (regenerate with: python3 -m guide.build_guide)
+dist/
+guide/assets/
