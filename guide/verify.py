@@ -287,14 +287,15 @@ def _joined(parts: tuple[str, ...]) -> str:
 
 def _lesson_shape(lesson: Lesson, errors: list[str]) -> None:
     where = f"lesson {lesson.code}"
-    if len(lesson.examples) != 2:
-        errors.append(f"{where}: need 2 examples")
-    if len(lesson.mistakes) != 3:
-        errors.append(f"{where}: need 3 mistakes")
-    if len(lesson.practice) != 5:
-        errors.append(f"{where}: need 5 practice items")
-    if {lesson.examples[0].kind, lesson.examples[1].kind} != {"foundation", "sat"}:
-        errors.append(f"{where}: examples must be foundation and sat")
+    if len(lesson.examples) < 2:
+        errors.append(f"{where}: need at least 2 examples")
+    if len(lesson.mistakes) < 3:
+        errors.append(f"{where}: need at least 3 mistakes")
+    if len(lesson.practice) < 5:
+        errors.append(f"{where}: need at least 5 practice items")
+    kinds = {example.kind for example in lesson.examples}
+    if not {"foundation", "sat"}.issubset(kinds):
+        errors.append(f"{where}: examples must include foundation and sat")
     for label, text in (
         ("goal_en", lesson.goal_en),
         ("goal_uz", lesson.goal_uz),
