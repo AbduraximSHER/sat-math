@@ -137,10 +137,10 @@ def formula_tables() -> list[dict]:
     return tables
 
 
-def export_site(*, render_figures: bool = True) -> tuple[Path, Path]:
+def export_site(*, render_figures: bool = True, bank: dict[str, list[dict]] | None = None) -> tuple[Path, Path]:
     if render_figures:
         make_figures()
-    enriched, public_bank, lesson_keys = build_public_and_keys(UNITS)
+    enriched, public_bank, lesson_keys = build_public_and_keys(UNITS, bank)
     payload = {
         "units": [unit_json(unit, public_bank) for unit in enriched],
         "glossary": [{"en": en, "uz": uz, "hint": hint} for en, uz, hint in GLOSSARY],

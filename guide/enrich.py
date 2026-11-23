@@ -47,10 +47,11 @@ def bank_key_row(row: dict) -> dict:
     }
 
 
-def build_public_and_keys(units: tuple[Unit, ...]):
+def build_public_and_keys(units: tuple[Unit, ...], bank: dict[str, list[dict]] | None = None):
     """Return (enriched units, public bank map, keys payload)."""
     enriched = deepen_units(units)
-    bank = build_bank()
+    if bank is None:
+        bank = build_bank()
     public_bank = {code: [bank_public_row(row) for row in rows] for code, rows in bank.items()}
     lesson_keys: dict[str, dict] = {}
     for unit in enriched:

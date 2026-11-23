@@ -1,10 +1,12 @@
 # SAT Math — o'qituvchi qo'llanmasi
 
-Kasrlarni qo'shish, ayirish, ko'paytirish va bo'lishni biladigan sinf uchun raqamli SAT Math kursi. Har bir dars inglizcha va o'zbekcha: maqsad, o'qituvchi yo'li, chuqurlashtirilgan tushuntirish, ikki yechilgan misol, uchta odatiy xato, beshta sinf mashqi va saytda 100 ta tekshirilgan qo'shimcha misol.
+Kasrlarni qo'shish, ayirish, ko'paytirish va bo'lishni biladigan sinf uchun raqamli SAT Math kursi. Har bir dars inglizcha va o'zbekcha: maqsad, o'qituvchi yo'li, chuqurlashtirilgan tushuntirish, ikki yechilgan misol, uchta odatiy xato, beshta sinf mashqi va saytda o'quvchi o'zi tekshiradigan 100 ta qo'shimcha misol.
 
 Bu College Board nashri emas. Savollar original.
 
 ## Fayllar
+
+Word kitoblar `python3 -m guide.build_guide` bilan `dist/` papkasiga yoziladi. Ular repoda saqlanmaydi: GitHub Actions har tekshiruvda ularni **word-books** artefakti sifatida yig'adi (Actions → oxirgi CI → Artifacts).
 
 | Fayl | Nima |
 | --- | --- |
@@ -21,10 +23,10 @@ Mashq javoblari har dars oxiridagi kulrang blokda. O'quvchiga varaq berishdan ol
 ## Sinfda
 
 1. Maqsadni o'zbekcha o'qing.
-2. Foundation misolni doskada yeching.
+2. Foundation misolni doskada yeching. Saytdagi «Qadamma-qadam» tugmasi qadamlarni birma-bir ochadi.
 3. Mashqning birinchi ikkitasini sinfda bering.
 4. SAT uslubidagi misolni so'zlar izohi bilan tarjima qiling va tuzoqni ayting.
-5. Qolgan mashqni uyga bering.
+5. Qolgan mashqni uyga bering. Bank savollarini o'quvchi saytda o'zi tekshiradi.
 
 Raqamli SAT Math: 2 modul, 44 savol, 70 daqiqa, Desmos butun bo'limda ruxsat. Kitob scaled ball formulasini bermaydi.
 
@@ -32,9 +34,36 @@ Raqamli SAT Math: 2 modul, 44 savol, 70 daqiqa, Desmos butun bo'limda ruxsat. Ki
 
 Jonli: [https://sat-math.abenglish.workers.dev](https://sat-math.abenglish.workers.dev)
 
-GitHub: [AbduraximSHER/sat-math](https://github.com/AbduraximSHER/sat-math) — Cloudflare Workers Builds `main` ga push bo‘lganda avtomatik deploy qiladi.
+Sayt `site/` papkasida (Next.js, Cloudflare Workers).
 
-Sinf ekranida ochish uchun sayt `site/` papkasida. Har darsda 100 ta mashq banki (oson / o'rta / SAT) sahifalanadi. Kalit yopiq bo'lsa, mashq va mini-test javoblari brauzerga umuman yuborilmaydi — faqat kalit ochilganda `/api/keys` orqali yuklanadi. Til tugmasi inglizcha, o'zbekcha yoki ikkalasini ko'rsatadi.
+**O'qituvchi uchun**
+
+- **Kalit.** Kalit yopiq bo'lsa, javoblar brauzerga umuman yuborilmaydi. Ochilganda `/api/keys` orqali keladi.
+- **PIN (ixtiyoriy).** Kalitni o'quvchilardan himoyalash uchun Cloudflare'da `TEACHER_PIN` sirini qo'shing. Shundan keyin kalit PIN so'raydi, qurilma uni 30 kun eslab qoladi. Sir qo'shilmasa, hammasi avvalgidek: bir bosishda ochiladi.
+- **Mashq varag'i** (`/varaq`): istalgan darsning 100 ta savolidan daraja va son tanlab varaq tuziladi. «Yangi variant» aralashtiradi, havola o'sha variantni eslab qoladi. Kalit ochiq bo'lsa, javoblar alohida sahifaga chop etiladi.
+- **Ekran rejimi** (`F`): yon panel yashirinadi, matn kengayadi. Shrift hajmi `+` va `−` bilan, mavzu yorug' yoki qorong'i.
+- **Qidiruv** (`/` yoki `Ctrl K`): dars, atama va sahifalar, ikki tilda.
+- **Tezkor tugmalar:** `←` `→` darslar orasida, `K` kalit, `L` til, `?` hammasi.
+
+**O'quvchi uchun**
+
+- Har bir bank savolining ostida javob qatori. Sayt javobni serverda tekshiradi va to'g'ri yoki noto'g'ri ekanini aytadi, kalitni ochmaydi. Shakl xato bo'lsa, SAT qoidasini eslatadi: aralash son emas (7/2), vergul emas nuqta (3.5), qisqartirilgan kasr va ildiz.
+- Mini-test (`/mini`): 35 daqiqalik taymer, topshirgandan keyin natija va har bir xato uchun takrorlash kerak bo'lgan dars.
+- Natijalar shu brauzerda saqlanadi. Hech qanday ro'yxatdan o'tish yo'q.
+- Telefonda «Bosh ekranga qo'shish» mumkin. Ochilgan darslar internet uzilganda ham ochiladi.
+
+### PIN qo'yish
+
+Cloudflare dashboard → Workers → **sat-math** → Settings → Variables and Secrets → **Add** → turi *Secret*, nomi `TEACHER_PIN`, qiymati PIN. Yoki terminaldan:
+
+```bash
+cd site
+npx wrangler secret put TEACHER_PIN
+```
+
+Kamida 6 belgili PIN tanlang. PIN o'zgarsa, barcha qurilmalardan kalit qayta so'raladi.
+
+### Kompyuterda ishga tushirish
 
 ```bash
 cd site
@@ -42,16 +71,45 @@ npm install
 npm run dev
 ```
 
-Brauzerda `http://127.0.0.1:3847`.
+Brauzerda `http://127.0.0.1:3847`. Tekshiruvlar:
+
+```bash
+npm run lint
+```
+
+```bash
+npm run typecheck
+```
+
+```bash
+npm test
+```
+
+Cloudflare muhitining o'zida sinash (`wrangler dev`):
+
+```bash
+npm run preview
+```
+
+### Deploy
+
+`main` ga push → GitHub Actions avval CI ni yuritadi (Python tekshiruvi, lint, tiplar, testlar, worker yig'ish va Workers muhitida smoke-test), so'ng `npx opennextjs-cloudflare deploy` bilan Cloudflare'ga chiqaradi. Kerakli sirlar repoda bor: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
+
+Agar Cloudflare dashboard'da Workers Builds ham ulangan bo'lsa, ikki marta deploy bo'lmasligi uchun bittasini qoldiring. Workers Builds'da deploy buyrug'i `npx opennextjs-cloudflare deploy` bo'lsin: u darslarni tayyor sahifa sifatida beradi.
 
 ## Qayta yig'ish
 
 ```bash
 python3 -m pip install -r requirements.txt
+```
+
+```bash
 python3 -m guide.build_guide
 ```
 
-Tekshiruv har bir javobni SymPy bilan qayta hisoblaydi. Xato bo'lsa, Word fayl yozilmaydi.
+Tekshiruv har bir javobni SymPy bilan qayta hisoblaydi. Bankdagi 4 400 savolning 3 700 dan ortig'i savol matnining o'zidan qayta o'qib hisoblanadi, shuning uchun formatdagi xato ham noto'g'ri kalitga aylanmaydi. Xato bo'lsa, Word fayl ham, sayt ma'lumoti ham yozilmaydi.
+
+Buyruq `site/data/guide.json`, `site/data/keys.json` va `site/public/figures/*.svg` ni yangilaydi. Mazmun o'zgarsa, shularni ham commit qiling: CI ma'lumot Python manbaiga mos kelmasa, to'xtaydi.
 
 ## Subagent
 
