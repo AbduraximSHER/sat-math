@@ -1,1 +1,0 @@
-$jsonFile:/tmp/push_both_inline_args.json#/files/1/content
