@@ -28,12 +28,18 @@ jobs:
 
       - name: Committed site data matches the Python source
         run: |
-          stale="$(git status --porcelain -- site/data site/public/figures)"
+          stale="$(git status --porcelain -- site/data)"
           if [ -n "$stale" ]; then
             echo "$stale"
-            git diff --stat -- site/data site/public/figures
-            echo "::error::site/data or site/public/figures is out of date. Run 'python3 -m guide.build_guide' and commit the result."
+            git diff --stat -- site/data
+            echo "::error::site/data is out of date. Run 'python3 -m guide.build_guide' and commit the result."
             exit 1
+          fi
+          # Figures can differ by a hair between machines, so only warn.
+          figures="$(git status --porcelain -- site/public/figures)"
+          if [ -n "$figures" ]; then
+            echo "$figures"
+            echo "::warning::site/public/figures differs from a fresh build. Commit the new SVGs if a figure was changed on purpose."
           fi
 
       - name: Upload the Word books

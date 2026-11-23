@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import io
+import re
 from pathlib import Path
 
 import matplotlib
@@ -43,13 +45,35 @@ def _style() -> None:
     )
 
 
+def _short(value: float) -> str:
+    text = f"{value:.2f}".rstrip("0").rstrip(".")
+    return "0" if text in ("", "-0") else text
+
+
+def _tidy_svg(text: str) -> str:
+    """Round coordinates to 0.01 so float noise from one CPU to the next disappears.
+
+    Glyph scale factors such as scale(0.015625) stay exact.
+    """
+    parts = re.split(r"(scale\([^)]*\))", text)
+    for index in range(0, len(parts), 2):
+        parts[index] = re.sub(
+            r"(?<![\w#.])-?\d+\.\d{3,}",
+            lambda match: _short(float(match.group(0))),
+            parts[index],
+        )
+    return "".join(parts)
+
+
 def _save(fig: plt.Figure, name: str) -> Path:
     """Write a print PNG for the Word book and a vector SVG for the website."""
     ASSET_DIR.mkdir(parents=True, exist_ok=True)
     path = ASSET_DIR / f"{name}.png"
     options = dict(bbox_inches="tight", pad_inches=0.18)
     fig.savefig(path, dpi=300, **options)
-    fig.savefig(ASSET_DIR / f"{name}.svg", metadata={"Date": None}, **options)
+    svg = io.StringIO()
+    fig.savefig(svg, format="svg", metadata={"Date": None}, **options)
+    (ASSET_DIR / f"{name}.svg").write_text(_tidy_svg(svg.getvalue()), encoding="utf-8")
     plt.close(fig)
     return path
 

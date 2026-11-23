@@ -43,6 +43,7 @@ def bank_key_row(row: dict) -> dict:
         "answer": row["answer"],
         "solutionEn": row["solutionEn"],
         "solutionUz": row["solutionUz"],
+        "check": row["check"],
     }
 
 

@@ -6,6 +6,9 @@ import json
 import shutil
 from pathlib import Path
 
+import sympy as sp
+
+from guide.bank import c_num, c_pair, c_pi
 from guide.content import MINI, UNITS
 from guide.content.front import formula_sheet
 from guide.content.glossary import GLOSSARY
@@ -109,6 +112,18 @@ def mini_public(item: MiniItem) -> dict:
     }
 
 
+def mini_check(item: MiniItem) -> dict:
+    """The answer spec the site's checker grades a typed mini-test answer against."""
+    check = item.checks[0]
+    if check.kind == "system2":
+        return c_pair(check.x, check.y)
+    if check.kind == "eq" and "π" in item.answer:
+        return c_pi(sp.simplify(sp.sympify(check.right) / sp.pi))
+    if check.kind in ("value", "solve"):
+        return c_num(check.expected, percent=item.answer.endswith("%"))
+    raise ValueError(f"mini {item.number}: no answer spec for check kind {check.kind}")
+
+
 def formula_tables() -> list[dict]:
     tables = []
     for block in formula_sheet():
@@ -140,6 +155,7 @@ def export_site(*, render_figures: bool = True) -> tuple[Path, Path]:
                 "answer": item.answer,
                 "analysisEn": item.analysis_en,
                 "analysisUz": item.analysis_uz,
+                "check": mini_check(item),
             }
             for item in MINI
         ],
