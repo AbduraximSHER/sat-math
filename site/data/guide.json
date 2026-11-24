@@ -5022,6 +5022,10 @@
             {
               "type": "p",
               "text": "Then change the picture to a speed: 150 miles in 2.5 hours. The unit rate is the fraction miles/hours. Practice 1–3 in class."
+            },
+            {
+              "type": "p",
+              "text": "Examples 2 and 3 are board work: the difference problem forces 'one part first', and the better buy forces the same unit on both sides. Example 5 is the exit question. Before anyone divides, ask for the unit of the answer."
             }
           ],
           "teacherUz": [
@@ -5036,6 +5040,10 @@
             {
               "type": "p",
               "text": "So'ng rasmni tezlikka almashtiring: 2.5 soatda 150 mil. Birlik tezlik — mil/soat kasri. 1–3 mashq sinfda."
+            },
+            {
+              "type": "p",
+              "text": "2- va 3-misollar doskada ishlanadi: farq masalasi 'avval bitta ulush'ni, arzon xarid esa ikki tomonda bir xil birlikni talab qiladi. 5-misol — darsdan chiqish savoli. Kimdir bo'lishidan oldin javobning birligini so'rang."
             }
           ],
           "explainEn": [
@@ -5061,15 +5069,55 @@
             },
             {
               "type": "p",
-              "text": "A ratio a:b is the fraction a/b after you confirm the order matches the nouns. Unit rate puts 1 in the denominator of the thing you are pricing or timing."
+              "text": "Order follows the words. 'The ratio of cats to dogs is 3:4' means cats/dogs = 3/4. Writing 4:3 answers a different question. The same comparison can be written 3:4, 3 to 4, or 3/4, and the SAT uses all three."
             },
             {
               "type": "p",
-              "text": "When units disagree (minutes vs hours, cents vs dollars), convert before you form the ratio. A correct fraction with wrong units is still wrong."
+              "text": "Equivalent ratios work like equivalent fractions. Multiply or divide both numbers by the same number and the ratio does not change: 12:18 = 2:3 after dividing both by 6, and 2:3 = 10:15 after multiplying both by 5. Both amounts must be in the same unit first. 30 minutes to 2 hours is 30:120 = 1:4, not 30:2 = 15:1."
+            },
+            {
+              "type": "p",
+              "text": "A ratio can have three parts. Nuts, raisins and seeds in the ratio 1:2:3 make 1 + 2 + 3 = 6 parts. In a 600-gram mix one part is 600/6 = 100 grams, so there are 100 g of nuts, 200 g of raisins and 300 g of seeds. Check: 100 + 200 + 300 = 600."
+            },
+            {
+              "type": "p",
+              "text": "Sometimes the question gives a difference instead of a total. If red and blue marbles are in the ratio 5:2 and there are 15 more red than blue, the difference is 5 − 2 = 3 parts. Three parts are 15, so one part is 5, and there are 2 × 5 = 10 blue and 5 × 5 = 25 red. Find the size of one part first; every other number follows from it."
+            },
+            {
+              "type": "formula",
+              "text": "one part = given amount / number of parts it covers"
+            },
+            {
+              "type": "p",
+              "text": "A rate can be read in both directions, and the word 'per' decides which. 60 kilometers per hour is 60 km / 1 h. The same trip is 1/60 hour per kilometer, which is 1 minute per kilometer. To compare two offers, put both in the same direction. 6 notebooks for $9 is $1.50 per notebook; 10 notebooks for $14 is $1.40 per notebook, so the second is cheaper by 10 cents each."
+            },
+            {
+              "type": "p",
+              "text": "Rate, amount and time are linked: amount = rate × time. A car at 60 km per hour for 2.5 hours covers 60 × 2.5 = 150 km. To find a time, divide: 150 km at 60 km per hour takes 150/60 = 2.5 hours."
+            },
+            {
+              "type": "formula",
+              "text": "distance = rate × time"
+            },
+            {
+              "type": "p",
+              "text": "To change units, multiply by a fraction equal to 1, written so that the unit you do not want cancels. 60 km per hour × (1000 m / 1 km) × (1 h / 60 min) = 1000 m per minute. Units cancel like common factors in a fraction, so this method cannot put a unit in the wrong place."
+            },
+            {
+              "type": "p",
+              "text": "On the SAT, 'at this rate' means the rate stays the same, so a proportion or a unit rate solves the problem. Wrong choices are often built from the reciprocal rate (hours per mile instead of miles per hour), the part-to-part fraction (2/3 instead of 2/5), or an answer left in the wrong unit (minutes when the question asks for hours). Name the unit of the answer before you compute."
+            },
+            {
+              "type": "p",
+              "text": "After the parts are named, write the whole as a sum before any multiplication. The board should show 2 + 3 = 5, then 2/5 × total — never jump straight to 2/3 × total."
+            },
+            {
+              "type": "p",
+              "text": "Map and recipe stems are the same scale factor in different clothes. Distance on map / map unit = real distance / real unit; cups / batch size stays constant."
             },
             {
               "type": "say",
-              "text": "Underline the two nouns in the stem. The left noun is the numerator until the sentence says otherwise."
+              "text": "Underline the two nouns in the stem. Ask aloud: part-to-part, or part of the whole? The answer decides whether you divide by b or by a + b."
             }
           ],
           "explainUz": [
@@ -5095,15 +5143,55 @@
             },
             {
               "type": "p",
-              "text": "Nisbat a:b — tartib otlarga mosligini tekshirgach a/b kasri. Birlik qiymat — baholayotgan yoki vaqtlayotgan narsaning maxrajida 1 turadi."
+              "text": "Tartib so'zlarga bo'ysunadi. 'Mushuklarning itlarga nisbati 3:4' degani mushuk/it = 3/4. 4:3 deb yozish boshqa savolga javob beradi. Bir xil solishtirma 3:4, '3 ga 4' yoki 3/4 deb yoziladi, SAT uchalasini ham ishlatadi."
             },
             {
               "type": "p",
-              "text": "Birliklar mos kelmasa (daqiqa–soat, tiyin–so'm), nisbat yasashdan oldin aylantiring. Noto'g'ri birlikdagi to'g'ri kasr ham noto'g'ri."
+              "text": "Teng nisbatlar teng kasrlar kabi ishlaydi. Ikkala sonni bir xil songa ko'paytirsangiz yoki bo'lsangiz, nisbat o'zgarmaydi: 12:18 ikkalasini 6 ga bo'lgach 2:3 bo'ladi, 2:3 esa ikkalasini 5 ga ko'paytirgach 10:15. Avval ikkala miqdor bir xil birlikda bo'lishi kerak. 30 daqiqaning 2 soatga nisbati 30:120 = 1:4, 30:2 = 15:1 emas."
+            },
+            {
+              "type": "p",
+              "text": "Nisbat uch qismli ham bo'ladi. Yong'oq, mayiz va urug' 1:2:3 nisbatda bo'lsa, 1 + 2 + 3 = 6 ulush. 600 grammli aralashmada bitta ulush 600/6 = 100 gramm, demak 100 g yong'oq, 200 g mayiz va 300 g urug'. Tekshiruv: 100 + 200 + 300 = 600."
+            },
+            {
+              "type": "p",
+              "text": "Ba'zan savol jami o'rniga farqni beradi. Qizil va ko'k sharchalar 5:2 nisbatda bo'lib, qizillar ko'kdan 15 ta ko'p bo'lsa, farq 5 − 2 = 3 ulush. Uch ulush 15 ga teng, demak bitta ulush 5, ko'klar 2 × 5 = 10 ta, qizillar 5 × 5 = 25 ta. Avval bitta ulushning kattaligini toping, qolgan sonlar undan chiqadi."
+            },
+            {
+              "type": "formula",
+              "text": "bitta ulush = berilgan miqdor / u qamragan ulushlar soni"
+            },
+            {
+              "type": "p",
+              "text": "Tezlikni ikki tomondan o'qish mumkin, qaysi biri ekanini 'per' (-ga, boshiga) so'zi hal qiladi. Soatiga 60 kilometr — 60 km / 1 soat. Xuddi shu safar kilometriga 1/60 soat, ya'ni kilometriga 1 daqiqa. Ikki taklifni solishtirish uchun ikkalasini bir xil yo'nalishda oling. 9 dollarga 6 ta daftar — daftari 1.50 dollar; 14 dollarga 10 ta daftar — daftari 1.40 dollar, demak ikkinchisi har biri 10 sentga arzon."
+            },
+            {
+              "type": "p",
+              "text": "Tezlik, miqdor va vaqt bog'langan: miqdor = tezlik × vaqt. Soatiga 60 km tezlikda 2.5 soat yurgan mashina 60 × 2.5 = 150 km yuradi. Vaqtni topish uchun bo'ling: soatiga 60 km tezlikda 150 km uchun 150/60 = 2.5 soat kerak."
+            },
+            {
+              "type": "formula",
+              "text": "masofa = tezlik × vaqt"
+            },
+            {
+              "type": "p",
+              "text": "Birlikni almashtirish uchun 1 ga teng kasrga ko'paytiring va uni keraksiz birlik qisqaradigan qilib yozing. Soatiga 60 km × (1000 m / 1 km) × (1 soat / 60 daqiqa) = daqiqasiga 1000 m. Birliklar kasrdagi umumiy ko'paytuvchilar kabi qisqaradi, shuning uchun bu usul birlikni noto'g'ri joyga qo'ymaydi."
+            },
+            {
+              "type": "p",
+              "text": "SAT'dagi 'at this rate' (shu tezlikda) iborasi tezlik o'zgarmasligini bildiradi, shuning uchun masalani proporsiya yoki birlik qiymat yechadi. Noto'g'ri variantlar ko'pincha teskari tezlikdan (soatiga mil o'rniga milga soat), qism-qism kasridan (2/5 o'rniga 2/3) yoki noto'g'ri birlikda qolgan javobdan (savol soat so'raganda daqiqa) yasaladi. Hisoblashdan oldin javobning birligini ayting."
+            },
+            {
+              "type": "p",
+              "text": "Ulushlar nomlangach, ko'paytirishdan oldin butunni yig'indi qilib yozing. Doskada 2 + 3 = 5, so'ng 2/5 × jami ko'rinsin — to'g'ridan-to'g'ri 2/3 × jami ga sakramang."
+            },
+            {
+              "type": "p",
+              "text": "Xarita va retsept savollari — turli kiyimdagi bir xil masshtab. Xaritadagi masofa / xarita birligi = haqiqiy masofa / haqiqiy birlik; stakan / partiya o'lchami doimiy."
             },
             {
               "type": "say",
-              "text": "Savoldagi ikkita otni chizing. Gap boshqacha demaguncha chap ot — surat."
+              "text": "Savoldagi ikkita otni chizing. Baland so'rang: qism-qismmi, yoki butunning ulushimi? Javob b ga bo'lishni yoki a + b ga bo'lishni belgilaydi."
             }
           ],
           "examples": [
@@ -5130,9 +5218,53 @@
               "answer": "12"
             },
             {
+              "kind": "foundation",
+              "promptEn": "A bag holds red and blue marbles in the ratio 5:2. There are 15 more red marbles than blue marbles. How many blue marbles are in the bag?",
+              "promptUz": "Xaltada qizil va ko'k sharchalar 5:2 nisbatda. Qizil sharchalar ko'kdan 15 ta ko'p. Xaltada nechta ko'k sharcha bor?",
+              "gloss": "marbles — sharchalar; more … than — … dan ko'p; bag — xalta",
+              "choices": [],
+              "steps": [
+                {
+                  "en": "Red has 5 parts and blue has 2 parts, so red has 5 − 2 = 3 more parts than blue.",
+                  "uz": "Qizil 5 ulush, ko'k 2 ulush, demak qizil ko'kdan 5 − 2 = 3 ulush ko'p."
+                },
+                {
+                  "en": "Those 3 extra parts are the 15 extra marbles, so one part is 15 ÷ 3 = 5 marbles.",
+                  "uz": "O'sha 3 ortiqcha ulush — 15 ta ortiqcha sharcha, demak bitta ulush 15 ÷ 3 = 5 ta sharcha."
+                },
+                {
+                  "en": "Blue is 2 parts: 2 × 5 = 10. Check: red is 5 × 5 = 25, and 25 − 10 = 15.",
+                  "uz": "Ko'k 2 ulush: 2 × 5 = 10. Tekshiruv: qizil 5 × 5 = 25 va 25 − 10 = 15."
+                }
+              ],
+              "answer": "10"
+            },
+            {
+              "kind": "foundation",
+              "promptEn": "Store A sells 6 notebooks for $9. Store B sells 10 of the same notebooks for $14. Which store has the lower price per notebook, and by how much?",
+              "promptUz": "A do'kon 6 ta daftarni 9 dollarga sotadi. B do'kon xuddi shunday 10 ta daftarni 14 dollarga sotadi. Qaysi do'konda bitta daftar arzonroq va qanchaga?",
+              "gloss": "price per notebook — bitta daftar narxi; lower — pastroq; by how much — qanchaga",
+              "choices": [],
+              "steps": [
+                {
+                  "en": "Find each unit price: dollars divided by notebooks. Store A: 9/6 = 3/2, which is $1.50 per notebook.",
+                  "uz": "Har birining birlik narxini toping: dollarni daftarga bo'ling. A do'kon: 9/6 = 3/2, ya'ni daftari 1.50 dollar."
+                },
+                {
+                  "en": "Store B: 14/10 = 7/5, which is $1.40 per notebook.",
+                  "uz": "B do'kon: 14/10 = 7/5, ya'ni daftari 1.40 dollar."
+                },
+                {
+                  "en": "Compare the same unit: 3/2 − 7/5 = 15/10 − 14/10 = 1/10. Store B is cheaper by 1/10 dollar, which is 10 cents per notebook.",
+                  "uz": "Bir xil birlikni solishtiring: 3/2 − 7/5 = 15/10 − 14/10 = 1/10. B do'konda daftar 1/10 dollar, ya'ni 10 sent arzon."
+                }
+              ],
+              "answer": "Store B, cheaper by 1/10 dollar (10 cents) per notebook"
+            },
+            {
               "kind": "sat",
               "promptEn": "A car travels 150 miles in 2.5 hours at a constant speed. What is the speed in miles per hour?",
-              "promptUz": "Mashina tinimsiz tezlikda 2.5 soatda 150 mil yuradi. Tezlik soatiga necha mil?",
+              "promptUz": "Mashina o'zgarmas tezlikda 2.5 soatda 150 mil yuradi. Tezlik soatiga necha mil?",
               "gloss": "per hour — soatiga; constant speed — o'zgarmas tezlik; travels — yuradi",
               "choices": [
                 {
@@ -5171,6 +5303,49 @@
                 }
               ],
               "answer": "B. 60"
+            },
+            {
+              "kind": "sat",
+              "promptEn": "Water flows into a tank at a constant rate of 3/4 gallon per minute. At this rate, how many hours will it take to put 90 gallons of water into the tank?",
+              "promptUz": "Bakka suv daqiqasiga 3/4 gallon o'zgarmas tezlikda quyiladi. Shu tezlikda bakka 90 gallon suv quyish uchun necha soat kerak?",
+              "gloss": "at this rate — shu tezlikda; tank — bak; how many hours — necha soat",
+              "choices": [
+                {
+                  "letter": "A",
+                  "en": "1.125",
+                  "uz": "1.125"
+                },
+                {
+                  "letter": "B",
+                  "en": "2",
+                  "uz": "2"
+                },
+                {
+                  "letter": "C",
+                  "en": "67.5",
+                  "uz": "67.5"
+                },
+                {
+                  "letter": "D",
+                  "en": "120",
+                  "uz": "120"
+                }
+              ],
+              "steps": [
+                {
+                  "en": "Time = amount ÷ rate. 90 ÷ (3/4) = 90 × 4/3 = 120. The rate is per minute, so this is 120 minutes.",
+                  "uz": "Vaqt = miqdor ÷ tezlik. 90 ÷ (3/4) = 90 × 4/3 = 120. Tezlik daqiqasiga, demak bu 120 daqiqa."
+                },
+                {
+                  "en": "The question asks for hours. 120 minutes × (1 hour / 60 minutes) = 2 hours.",
+                  "uz": "Savol soat so'raydi. 120 daqiqa × (1 soat / 60 daqiqa) = 2 soat."
+                },
+                {
+                  "en": "D stops at 120: the right number of minutes in the wrong unit. C multiplies 90 × 3/4 instead of dividing. A multiplies and then converts to hours.",
+                  "uz": "D 120 da to'xtaydi: daqiqalar soni to'g'ri, birlik noto'g'ri. C bo'lish o'rniga 90 × 3/4 ni ko'paytiradi. A ko'paytirib, so'ng soatga aylantiradi."
+                }
+              ],
+              "answer": "B. 2"
             }
           ],
           "mistakes": [
@@ -5185,6 +5360,10 @@
             {
               "en": "Scaling a recipe by adding instead of multiplying. If 12 cookies need 2 cups, 30 cookies do not need 2 + 18 cups. They need (30/12) × 2 cups, which is 5.",
               "uz": "Retseptni ko'paytirish o'rniga qo'shib kattalashtirish. 12 ta pechenyega 2 stakan kerak bo'lsa, 30 tasiga 2 + 18 stakan kerak emas. (30/12) × 2 stakan kerak, ya'ni 5."
+            },
+            {
+              "en": "Forming a ratio from two different units. 30 minutes to 2 hours is not 30:2. Change both to minutes first: 30:120, which simplifies to 1:4. The same rule holds for cents and dollars, or meters and kilometers.",
+              "uz": "Ikki xil birlikdan nisbat tuzish. 30 daqiqaning 2 soatga nisbati 30:2 emas. Avval ikkalasini daqiqaga aylantiring: 30:120, qisqartirilsa 1:4. Tiyin va so'm, metr va kilometr uchun ham xuddi shu qoida."
             }
           ],
           "practice": [
