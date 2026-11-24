@@ -54,15 +54,21 @@ export function ExampleCard({ example, index, id }: { example: Example; index: n
             {example.choices.map((choice) => (
               <li key={choice.letter} className="flex gap-2 rounded-lg border border-line bg-surface-2 px-3 py-1.5">
                 <span className="font-bold text-heading">{choice.letter}</span>
-                <span>
-                  <span lang="en" className="lang-en">
+                {choice.en === choice.uz ? (
+                  <span>
                     <M>{choice.en}</M>
                   </span>
-                  <span className="lang-both text-ink-muted"> / </span>
-                  <span lang="uz" className="lang-uz text-uz">
-                    <M>{choice.uz}</M>
+                ) : (
+                  <span>
+                    <span lang="en" className="lang-en">
+                      <M>{choice.en}</M>
+                    </span>
+                    <span className="lang-both text-ink-muted"> / </span>
+                    <span lang="uz" className="lang-uz text-uz">
+                      <M>{choice.uz}</M>
+                    </span>
                   </span>
-                </span>
+                )}
               </li>
             ))}
           </ul>

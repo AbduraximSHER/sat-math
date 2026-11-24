@@ -80,7 +80,9 @@ export default async function LessonPage({ params }: { params: Promise<{ code: s
             <span className="chip">
               <Clock className="size-3.5" aria-hidden /> 40–50 daqiqa
             </span>
-            <span className="chip">2 misol · 5 mashq · 100 bank</span>
+            <span className="chip">
+              {lesson.examples.length} misol · {lesson.practice.length} mashq · {lesson.bank.length} bank
+            </span>
             <DoneToggle code={lesson.code} />
             <Link href={`/varaq?dars=${encodeURIComponent(lesson.code)}`} className="no-print chip h-8 px-3 hover:text-ink">
               <Printer className="size-3.5" aria-hidden /> Varaq
