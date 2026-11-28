@@ -117,7 +117,7 @@ Bitta dars uchun Word fayl (bir sahifalik qisqa konspekt + batafsil dars), hozir
 python3 -m guide.handout 1.7
 ```
 
-Fayl `dist/Dars-1.7.docx` ga yoziladi. Boshqa dars uchun `guide/handout.py` dagi `SUMMARIES` ga konspekt qo'shing.
+Fayl `dist/Dars-1.7.docx` ga yoziladi. Faqat o'zbekcha variant (har misol va mashq yechimi bilan): `python3 -m guide.handout --uz 1.7` → `dist/Dars-1.7-uz.docx`. U har qanday dars uchun ishlaydi; qisqa konspekt faqat `SUMMARIES` da bor darslarga qo'shiladi. Boshqa dars uchun `guide/handout.py` dagi `SUMMARIES` ga konspekt qo'shing.
 
 `build_guide` buyrug'i `site/data/guide.json`, `site/data/keys.json` va `site/public/figures/*.svg` ni yangilaydi. Mazmun o'zgarsa, shularni ham commit qiling: CI ma'lumot Python manbaiga mos kelmasa, to'xtaydi.
 

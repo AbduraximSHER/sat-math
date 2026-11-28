@@ -107,6 +107,106 @@ def build(code: str) -> Path:
     return out
 
 
+def build_uz(code: str) -> Path:
+    """Uzbek-only handout: summary, full explanation, every example and practice item worked out."""
+    lesson = next((l for unit in deepen_units(UNITS) for l in unit.lessons if l.code == code), None)
+    if lesson is None:
+        raise SystemExit(f"No lesson {code}.")
+    summary = SUMMARIES.get(code)
+    make_figures()
+
+    doc = bg._new_doc()
+    bg._title_page(
+        doc,
+        kicker=f"DARS {code}",
+        title=lesson.title_uz,
+        subtitle_en="",
+        subtitle_uz="O'zbek tilida tushuntirish, misollar va yechimlar",
+        foot="Qisqa konspekt · tushuntirish · yechilgan misollar · xatolar · mashq va yechimlari",
+    )
+
+    if summary:
+        doc.add_page_break()
+        bg._heading(doc, "Qisqacha", 2)
+        bg._table(doc, ("G'oya", "Qoida"), tuple(summary["ideas"]))
+        traps = [f"{index}. {text}" for index, text in enumerate(summary["traps"], start=1)]
+        bg._box(doc, traps, fill="FBF7EF", border="E4D3A8", left="C4A35A", label="TUZOQLAR", label_color=bg.GOLD)
+
+    doc.add_page_break()
+    bg._heading(doc, f"Dars {code}. {lesson.title_uz}", 2)
+    bg._heading(doc, "Maqsad", 3)
+    bg._body_chunks(doc, (lesson.goal_uz,))
+    bg._heading(doc, "Oldindan bilishi kerak", 3)
+    bg._body_chunks(doc, (lesson.prereq_uz,))
+    bg._heading(doc, "O'qituvchi uchun", 3)
+    bg._body_chunks(doc, lesson.teacher_uz)
+    bg._heading(doc, "Tushuntirish", 3)
+    bg._body_chunks(doc, lesson.explain_uz)
+
+    if lesson.figure:
+        picture = doc.add_paragraph()
+        picture.alignment = bg.WD_ALIGN_PARAGRAPH.CENTER
+        picture.add_run().add_picture(str(bg.ASSETS / f"{lesson.figure}.png"), width=bg.Cm(lesson.figure_width_cm))
+        caption = doc.add_paragraph()
+        caption.alignment = bg.WD_ALIGN_PARAGRAPH.CENTER
+        bg._add_text(caption, lesson.figure_caption_uz, size=10, italic=True, color=bg.TEAL)
+
+    bg._heading(doc, "Yechilgan misollar", 3)
+    for index, example in enumerate(lesson.examples, start=1):
+        kind = "SAT uslubi" if example.kind == "sat" else "Asosiy"
+        lines = [example.prompt_uz]
+        if example.gloss:
+            lines.append("So'zlar: " + example.gloss)
+        lines += [f"{letter}) {uz}" for letter, _en, uz in example.choices]
+        fill, border, left, color = ("FBF7EF", "E4D3A8", "C4A35A", bg.GOLD) if example.kind == "sat" else ("F4F8F8", "D5E4E3", "0F6E6B", bg.TEAL)
+        bg._box(doc, lines, fill=fill, border=border, left=left, label=f"{index}-MISOL · {kind.upper()}", label_color=color)
+        # Keep the question box, its solution and the answer on one page.
+        for paragraph in doc.tables[-1].cell(0, 0).paragraphs:
+            paragraph.paragraph_format.keep_with_next = True
+        doc.paragraphs[-1].paragraph_format.keep_with_next = True
+        label = doc.add_paragraph()
+        label.paragraph_format.keep_with_next = True
+        bg._add_text(label, "Yechim:", bold=True, color=bg.NAVY, space_after=2)
+        for step_index, (_en, uz) in enumerate(example.steps, start=1):
+            step = doc.add_paragraph()
+            step.paragraph_format.left_indent = bg.Cm(0.4)
+            step.paragraph_format.keep_with_next = True
+            bg._add_text(step, f"{step_index}. {uz}", space_after=3)
+        answer = doc.add_paragraph()
+        bg._add_text(answer, "Javob: " + example.answer, size=12, bold=True, color=bg.NAVY, space_after=10)
+
+    bg._heading(doc, "Tez-tez uchraydigan xatolar", 3)
+    for index, mistake in enumerate(lesson.mistakes, start=1):
+        line = doc.add_paragraph()
+        bg._add_text(line, f"{index}. {mistake.uz}", space_after=5)
+
+    bg._heading(doc, "Mashq va yechimlari", 3)
+    for index, item in enumerate(lesson.practice, start=1):
+        question = doc.add_paragraph()
+        question.paragraph_format.keep_with_next = True
+        bg._add_text(question, f"{index}. {item.prompt_uz}", bold=True, space_after=2)
+        if item.gloss:
+            gloss = doc.add_paragraph()
+            gloss.paragraph_format.left_indent = bg.Cm(0.4)
+            gloss.paragraph_format.keep_with_next = True
+            bg._add_text(gloss, "So'zlar: " + item.gloss, size=10, italic=True, color=bg.MUTED, space_after=2)
+        worked = doc.add_paragraph()
+        worked.paragraph_format.left_indent = bg.Cm(0.4)
+        worked.paragraph_format.keep_with_next = True
+        bg._add_text(worked, "Yechim: " + item.solution_uz, color=bg.TEAL, space_after=2)
+        answer = doc.add_paragraph()
+        answer.paragraph_format.left_indent = bg.Cm(0.4)
+        bg._add_text(answer, "Javob: " + item.answer, bold=True, color=bg.NAVY, space_after=8)
+
+    out = bg.DIST / f"Dars-{code}-uz.docx"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    doc.save(out)
+    return out
+
+
 if __name__ == "__main__":
-    for code in sys.argv[1:] or sorted(SUMMARIES):
-        print(f"Wrote {build(code)}")
+    args = sys.argv[1:]
+    uzbek = "--uz" in args
+    codes = [arg for arg in args if arg != "--uz"] or sorted(SUMMARIES)
+    for code in codes:
+        print(f"Wrote {build_uz(code) if uzbek else build(code)}")
