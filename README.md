@@ -111,7 +111,15 @@ python3 -m guide.build_guide
 
 Tekshiruv har bir javobni SymPy bilan qayta hisoblaydi. Bankdagi 4 400 savolning 3 700 dan ortig'i savol matnining o'zidan qayta o'qib hisoblanadi, shuning uchun formatdagi xato ham noto'g'ri kalitga aylanmaydi. Xato bo'lsa, Word fayl ham, sayt ma'lumoti ham yozilmaydi.
 
-Buyruq `site/data/guide.json`, `site/data/keys.json` va `site/public/figures/*.svg` ni yangilaydi. Mazmun o'zgarsa, shularni ham commit qiling: CI ma'lumot Python manbaiga mos kelmasa, to'xtaydi.
+Bitta dars uchun Word fayl (bir sahifalik qisqa konspekt + batafsil dars), hozircha 1.6 va 1.7 uchun:
+
+```bash
+python3 -m guide.handout 1.7
+```
+
+Fayl `dist/Dars-1.7.docx` ga yoziladi. Boshqa dars uchun `guide/handout.py` dagi `SUMMARIES` ga konspekt qo'shing.
+
+`build_guide` buyrug'i `site/data/guide.json`, `site/data/keys.json` va `site/public/figures/*.svg` ni yangilaydi. Mazmun o'zgarsa, shularni ham commit qiling: CI ma'lumot Python manbaiga mos kelmasa, to'xtaydi.
 
 ## Subagent
 

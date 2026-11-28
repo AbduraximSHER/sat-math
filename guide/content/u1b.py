@@ -1,6 +1,6 @@
 """Foundations 1.6–1.10: ratio, proportion, exponents, roots, units."""
 
-from guide.model import Example, Lesson, Mistake, Practice, eq, value
+from guide.model import Example, Lesson, Mistake, Practice, eq, solve, value
 
 L16 = Lesson(
     code="1.6",
@@ -211,23 +211,43 @@ L17 = Lesson(
         "Write 3/4 = x/20 and cover the x. Ask which operation undoes 'divide by 20.' Multiplying both sides by 20 is the whole method. Then show one inverse case with painters so the class does not treat every word problem as direct.",
         "SAY: Proporsiya — ikki kasr teng. To'g'ri proporsiyada biri o'ssa, ikkinchisi ham o'sadi. Teskari proporsiyada biri o'ssa, ikkinchisi kamayadi: ko'proq bo'yoqchi, kamroq kun.",
         "Practice 4 is the inverse one. Do it on the board even if the others are quiet work.",
+        "Examples 2 and 3 are board work: the parentheses in example 2 and the map scale in example 3. Example 5 is the exit question. Before anyone computes, ask: if x doubles, what happens to y?",
     ),
     teacher_uz=(
         "3/4 = x/20 yozing va x ni yoping. '20 ga bo'lishni' qaysi amal qaytarishini so'rang. Ikki tomonni 20 ga ko'paytirish — butun usul. So'ng bo'yoqchilar bilan bitta teskari holat ko'rsating, sinf har bir masalani to'g'ri proporsiya deb olmasin.",
         "SAY: Proporsiya — ikki kasr teng. To'g'ri proporsiyada biri o'ssa, ikkinchisi ham o'sadi. Teskari proporsiyada biri o'ssa, ikkinchisi kamayadi: ko'proq bo'yoqchi, kamroq kun.",
         "4-mashq teskari. Qolganlari tinch ish bo'lsa ham, uni doskada yeching.",
+        "2- va 3-misollar doskada ishlanadi: 2-misoldagi qavs va 3-misoldagi xarita masshtabi. 5-misol — darsdan chiqish savoli. Kimdir hisoblashdan oldin so'rang: x ikki baravar oshsa, y bilan nima bo'ladi?",
     ),
     explain_en=(
         "A proportion says two fractions are equal. 3/4 = x/20 means the same relationship at two sizes. Multiply both sides by 20, which is the reciprocal move the class already owns: x = 20 × 3/4 = 15. Cross-multiplying is the same fact written across the equal sign: 4x = 3 × 20, then x = 60/4 = 15. Use whichever picture the class can say back.",
         "Direct proportion: when one amount doubles, the other doubles. Five notebooks cost $8, so one costs 8/5 of a dollar, and fifteen cost 15 × 8/5 = 24 dollars. The fraction cost/notebooks stays constant.",
         "Inverse proportion: when one amount doubles, the other is cut in half. The product stays constant. Four painters take 10 days, so the job is 4 × 10 = 40 painter-days. Five painters take 40/5 = 8 days. More painters, fewer days. Treating that as direct and computing (5/4) × 10 = 12.5 days sends the time the wrong way.",
         "The SAT rarely says the word 'inverse.' It describes the situation: a job shared by more people, a trip at a higher speed, a fixed area with a longer base. Ask 'if this one grows, does the other grow?' before you write the proportion. If the answer is no, you are looking at a constant product, not a constant ratio.",
+        "Set up a proportion with the same order on both sides. If 2 cups of rice feed 5 people, write cups/people = cups/people: 2/5 = x/15. A small table helps: one column for cups, one for people, and one row for each situation. Reading across a row gives one situation; reading down a column gives one unit.",
+        "Two ratios form a proportion only if they are equal. Test it with cross products: 6/9 and 8/12 give 6 × 12 = 72 and 9 × 8 = 72, so they match. 6/9 and 8/10 give 60 and 72, so they do not. On the SAT this check decides which table or which pair of values is proportional.",
+        "In a direct proportion the ratio y/x is a constant k, so y = kx. If y = 12 when x = 4, then k = 12/4 = 3, and when x = 10, y = 3 × 10 = 30. The graph of y = kx is a straight line through the origin (0, 0). A line that misses the origin is linear, but it is not a proportion.",
+        "F: y = kx   (direct: y/x stays the same)",
+        "In an inverse proportion the product xy is a constant k, so y = k/x. If y = 6 when x = 4, then k = 4 × 6 = 24, and when x = 8, y = 24/8 = 3. Doubling x halved y. Speed and time on a fixed trip behave this way: 120 km at 60 km per hour takes 2 hours, and at 40 km per hour it takes 3 hours, because 60 × 2 = 40 × 3 = 120.",
+        "F: xy = k   (inverse: the product stays the same)",
+        "A map scale is a direct proportion. If 2 cm on the map stands for 15 km, then 1 cm stands for 15/2 = 7.5 km, and 7 cm stands for 7 × 7.5 = 52.5 km. Write the scale as a fraction with the units in the same places on both sides.",
+        "When a numerator is a sum, keep it in parentheses. (x + 1)/4 = 6/8 cross-multiplies to 8(x + 1) = 4 × 6 = 24, so x + 1 = 3 and x = 2. Writing 8x + 1 = 24 multiplies only part of the numerator. Simplifying 6/8 to 3/4 first is even faster: (x + 1)/4 = 3/4, so x + 1 = 3.",
+        "Before you trust an answer, ask whether it moved the right way. More notebooks should cost more; more painters should need fewer days; a longer distance on the map should be a longer real distance. If the answer moved the wrong way, the proportion was set up upside down or as the wrong type. The SAT phrases to watch are 'at the same rate', 'is proportional to', 'varies directly' and 'varies inversely'.",
     ),
     explain_uz=(
         "Proporsiya ikki kasr teng deydi. 3/4 = x/20 degani bir xil munosabat ikki o'lchamda. Ikki tomonni 20 ga ko'paytiring — sinf bu teskari kasr yurishini allaqachon biladi: x = 20 × 3/4 = 15. Diagonali bo'yicha ko'paytirish — tenglikning ikki yonida yozilgan o'sha fakt: 4x = 3 × 20, so'ng x = 60/4 = 15. Sinf qaysi rasmni qaytara olsa, o'shanisini ishlating.",
         "To'g'ri proporsiya: biri ikki baravar bo'lsa, ikkinchisi ham ikki baravar. Besh daftarning narxi 8 dollar, bittasining narxi 8/5 dollar, o'n beshtasining narxi 15 × 8/5 = 24 dollar. Narx/daftar kasri o'zgarmaydi.",
         "Teskari proporsiya: biri ikki baravar bo'lsa, ikkinchisi yarmiga tushadi. Ko'paytma o'zgarmaydi. To'rt bo'yoqchi 10 kun ishlasa, ish 4 × 10 = 40 bo'yoqchi-kun. Besh bo'yoqchi 40/5 = 8 kun ishlaydi. Ko'proq bo'yoqchi, kamroq kun. Buni to'g'ri deb olib (5/4) × 10 = 12.5 kun hisoblash vaqtni teskari tomonga yuboradi.",
         "SAT 'teskari' so'zini kam aytadi. U vaziyatni tasvirlaydi: ko'proq odam bo'lib bo'linadigan ish, tezroq yuriladigan safar, asosi uzunroq bo'lgan o'zgarmas yuza. Proporsiya yozishdan oldin so'rang: 'biri o'ssa, ikkinchisi o'sadimi?' Javob yo'q bo'lsa, siz o'zgarmas nisbatga emas, o'zgarmas ko'paytmaga qarayapsiz.",
+        "Proporsiyani ikki tomonda bir xil tartibda tuzing. 2 stakan guruch 5 kishiga yetsa, stakan/kishi = stakan/kishi deb yozing: 2/5 = x/15. Kichik jadval yordam beradi: bir ustun stakan, bir ustun kishi, har bir vaziyat uchun bitta qator. Qator bo'ylab o'qish — bitta vaziyat, ustun bo'ylab o'qish — bitta birlik.",
+        "Ikki nisbat faqat teng bo'lsagina proporsiya tuzadi. Buni diagonal ko'paytmalar bilan tekshiring: 6/9 va 8/12 uchun 6 × 12 = 72 va 9 × 8 = 72, demak mos. 6/9 va 8/10 uchun 60 va 72, demak mos emas. SAT'da qaysi jadval yoki qaysi juftlik proporsional ekanini shu tekshiruv hal qiladi.",
+        "To'g'ri proporsiyada y/x nisbati o'zgarmas son k, demak y = kx. x = 4 da y = 12 bo'lsa, k = 12/4 = 3, va x = 10 da y = 3 × 10 = 30. y = kx grafigi koordinata boshidan (0, 0) o'tadigan to'g'ri chiziq. Boshdan o'tmaydigan chiziq chiziqli, lekin proporsiya emas.",
+        "F: y = kx   (to'g'ri: y/x o'zgarmaydi)",
+        "Teskari proporsiyada xy ko'paytmasi o'zgarmas son k, demak y = k/x. x = 4 da y = 6 bo'lsa, k = 4 × 6 = 24, va x = 8 da y = 24/8 = 3. x ikki baravar oshdi, y yarmiga tushdi. Bir xil yo'ldagi tezlik va vaqt shunday: 120 km yo'lni soatiga 60 km tezlikda 2 soatda, soatiga 40 km tezlikda 3 soatda bosib o'tasiz, chunki 60 × 2 = 40 × 3 = 120.",
+        "F: xy = k   (teskari: ko'paytma o'zgarmaydi)",
+        "Xarita masshtabi — to'g'ri proporsiya. Xaritada 2 sm 15 km ni bildirsa, 1 sm 15/2 = 7.5 km ni, 7 sm esa 7 × 7.5 = 52.5 km ni bildiradi. Masshtabni ikki tomonda birliklar bir xil joyda turadigan kasr qilib yozing.",
+        "Surat yig'indi bo'lsa, uni qavsda saqlang. (x + 1)/4 = 6/8 diagonali bo'yicha ko'paytirilsa 8(x + 1) = 4 × 6 = 24, demak x + 1 = 3 va x = 2. 8x + 1 = 24 deb yozish suratning faqat bir qismini ko'paytiradi. Avval 6/8 ni 3/4 ga qisqartirish yanada tez: (x + 1)/4 = 3/4, demak x + 1 = 3.",
+        "Javobga ishonishdan oldin u to'g'ri tomonga o'zgarganini so'rang. Ko'proq daftar qimmatroq turishi, ko'proq bo'yoqchiga kamroq kun kerak bo'lishi, xaritadagi uzunroq masofa haqiqatda ham uzunroq bo'lishi kerak. Javob teskari tomonga ketgan bo'lsa, proporsiya ag'darilgan yoki turi noto'g'ri tanlangan. SAT'dagi muhim iboralar: 'at the same rate' (o'sha tezlikda), 'is proportional to' (proporsional), 'varies directly' (to'g'ri proporsional o'zgaradi) va 'varies inversely' (teskari proporsional o'zgaradi).",
     ),
     examples=(
         Example(
@@ -242,6 +262,32 @@ L17 = Lesson(
             ),
             answer="15",
             checks=value("20*(3/4)", "15"),
+        ),
+        Example(
+            kind="foundation",
+            prompt_en="Solve (x + 1)/4 = 6/8.",
+            prompt_uz="(x + 1)/4 = 6/8 proporsiyasini yeching.",
+            gloss="solve — yeching",
+            steps=(
+                ("Cross-multiply and keep the numerator in parentheses: 8(x + 1) = 4 × 6 = 24.", "Diagonali bo'yicha ko'paytiring va suratni qavsda saqlang: 8(x + 1) = 4 × 6 = 24."),
+                ("Divide by 8: x + 1 = 3, so x = 2.", "8 ga bo'ling: x + 1 = 3, demak x = 2."),
+                ("Check: (2 + 1)/4 = 3/4, and 6/8 also simplifies to 3/4.", "Tekshiruv: (2 + 1)/4 = 3/4, 6/8 ham 3/4 ga qisqaradi."),
+            ),
+            answer="x = 2",
+            checks=solve("(x + 1)/4 - 6/8", "2"),
+        ),
+        Example(
+            kind="foundation",
+            prompt_en="On a map, 2 cm stands for 15 km. Two towns are 7 cm apart on the map. How far apart are they in real life?",
+            prompt_uz="Xaritada 2 sm 15 km ni bildiradi. Ikki shahar xaritada bir-biridan 7 sm uzoqlikda. Ular haqiqatda bir-biridan qancha uzoqda?",
+            gloss="map — xarita; stands for — bildiradi; apart — uzoqlikda",
+            steps=(
+                ("Write map/real = map/real: 2/15 = 7/x. The units sit in the same places on both sides.", "xarita/haqiqiy = xarita/haqiqiy deb yozing: 2/15 = 7/x. Birliklar ikki tomonda bir xil joyda turadi."),
+                ("Cross-multiply: 2x = 15 × 7 = 105, so x = 105/2 = 52.5.", "Diagonali bo'yicha: 2x = 15 × 7 = 105, demak x = 105/2 = 52.5."),
+                ("Check with one centimeter: 15/2 = 7.5 km per cm, and 7 × 7.5 = 52.5 km.", "Bitta santimetr bilan tekshiring: santimetriga 15/2 = 7.5 km, va 7 × 7.5 = 52.5 km."),
+            ),
+            answer="52.5 km",
+            checks=value("15*7/2", "105/2"),
         ),
         Example(
             kind="sat",
@@ -262,6 +308,25 @@ L17 = Lesson(
             answer="C. 24",
             checks=value("(8/5)*15", "24"),
         ),
+        Example(
+            kind="sat",
+            prompt_en="The value of y varies inversely with x. When x = 4, y = 6. What is the value of y when x = 8?",
+            prompt_uz="y ning qiymati x ga teskari proporsional o'zgaradi. x = 4 bo'lganda y = 6. x = 8 bo'lganda y ning qiymati necha?",
+            gloss="varies inversely — teskari proporsional o'zgaradi; value — qiymat",
+            choices=(
+                ("A", "3", "3"),
+                ("B", "10", "10"),
+                ("C", "12", "12"),
+                ("D", "24", "24"),
+            ),
+            steps=(
+                ("Inverse means the product stays the same: xy = k. Here k = 4 × 6 = 24.", "Teskari degani ko'paytma o'zgarmaydi: xy = k. Bu yerda k = 4 × 6 = 24."),
+                ("When x = 8: 8y = 24, so y = 24/8 = 3. x doubled and y was cut in half.", "x = 8 da: 8y = 24, demak y = 24/8 = 3. x ikki baravar oshdi, y yarmiga tushdi."),
+                ("C treats it as direct: 6 × 2 = 12. D stops at the constant 24. B adds 4 to 6 instead of using a product.", "C uni to'g'ri proporsiya deb oladi: 6 × 2 = 12. D o'zgarmas 24 da to'xtaydi. B ko'paytma o'rniga 6 ga 4 ni qo'shadi."),
+            ),
+            answer="A. 3",
+            checks=value("4*6/8", "3"),
+        ),
     ),
     mistakes=(
         Mistake(
@@ -275,6 +340,10 @@ L17 = Lesson(
         Mistake(
             en="Forgetting to simplify before scaling and then mishandling a large product. 8/5 × 15 is easier as 8 × 3. Cancel the 5 against the 15 first.",
             uz="Masshtablashdan oldin qisqartirishni unutib, katta ko'paytmani chalkashtirish. 8/5 × 15 ni 8 × 3 qilib olish osonroq. Avval 5 ni 15 bilan qisqartiring.",
+        ),
+        Mistake(
+            en="Multiplying only part of a numerator. (x + 1)/4 = 6/8 becomes 8(x + 1) = 24, not 8x + 1 = 24. Keep the parentheses until you distribute, or simplify 6/8 to 3/4 first.",
+            uz="Suratning faqat bir qismini ko'paytirish. (x + 1)/4 = 6/8 dan 8(x + 1) = 24 chiqadi, 8x + 1 = 24 emas. Qavsni ochguncha saqlang yoki avval 6/8 ni 3/4 ga qisqartiring.",
         ),
     ),
     practice=(
